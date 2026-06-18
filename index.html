@@ -4,722 +4,715 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AATI Trading Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
-
-:root {
-  --bg: #080c14;
-  --surface: #0f1623;
-  --surface2: #161f30;
-  --border: #1e2d42;
-  --green: #00e676;
-  --green-dim: #00e67618;
-  --red: #ff3d57;
-  --red-dim: #ff3d5718;
-  --gold: #ffd600;
-  --gold-dim: #ffd60018;
-  --blue: #2979ff;
-  --blue-dim: #2979ff18;
-  --purple: #b388ff;
-  --purple-dim: #b388ff18;
-  --cyan: #00e5ff;
-  --text: #e2e8f0;
-  --text-dim: #4a6080;
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'Inter', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080c14;--s1:#0f1623;--s2:#161f30;--border:#1e2d42;
+  --green:#00e676;--gd:#00e67618;--gb:#00e67630;
+  --red:#ff3d57;--rd:#ff3d5718;--rb:#ff3d5730;
+  --gold:#ffd600;--goldd:#ffd60018;--goldb:#ffd60030;
+  --blue:#2979ff;--blued:#2979ff18;--blueb:#2979ff30;
+  --purple:#b388ff;--purpled:#b388ff18;--purpleb:#b388ff30;
+  --cyan:#00e5ff;--text:#e2e8f0;--dim:#4a6080;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
 
 /* ── LOGIN ── */
-#login-screen {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 50% 0%, #0d1f3c 0%, var(--bg) 70%);
-}
-.login-box {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 20px; padding: 52px 44px; width: 380px; text-align: center;
-  box-shadow: 0 40px 80px #00000060;
-}
-.login-logo { font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--green); letter-spacing: 6px; margin-bottom: 4px; }
-.login-tagline { color: var(--text-dim); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
-.login-systems { display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; }
-.sys-chip {
-  font-family: var(--mono); font-size: 10px; padding: 4px 10px;
-  border-radius: 20px; border: 1px solid var(--border); color: var(--text-dim);
-  letter-spacing: 1px;
-}
-.login-box input {
-  width: 100%; background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 15px 16px; color: var(--text);
-  font-family: var(--mono); font-size: 18px; letter-spacing: 6px;
-  text-align: center; margin-bottom: 14px; outline: none; transition: border-color 0.2s;
-}
-.login-box input:focus { border-color: var(--green); }
-.login-btn {
-  width: 100%; background: var(--green); color: #000; border: none;
-  border-radius: 10px; padding: 15px; font-family: var(--mono);
-  font-weight: 700; font-size: 13px; letter-spacing: 3px; cursor: pointer; transition: opacity 0.2s;
-}
-.login-btn:hover { opacity: 0.85; }
-.login-error { color: var(--red); font-size: 12px; margin-top: 10px; display: none; }
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#0d1f3c,var(--bg) 65%)}
+.lbox{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:52px 44px;width:380px;text-align:center;box-shadow:0 40px 80px #00000060}
+.llogo{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--green);letter-spacing:6px;margin-bottom:4px}
+.ltag{color:var(--dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+.lsys{display:flex;gap:8px;justify-content:center;margin-bottom:28px}
+.lchip{font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--dim);letter-spacing:1px}
+.lbox input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:15px;color:var(--text);font-family:var(--mono);font-size:18px;letter-spacing:6px;text-align:center;margin-bottom:14px;outline:none;transition:border-color .2s}
+.lbox input:focus{border-color:var(--green)}
+.lbtn{width:100%;background:var(--green);color:#000;border:none;border-radius:10px;padding:15px;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:3px;cursor:pointer;transition:opacity .2s}
+.lbtn:hover{opacity:.85}
+.lerr{color:var(--red);font-size:12px;margin-top:10px;display:none}
 
 /* ── APP ── */
-#app { display: none; }
+#app{display:none}
 
 /* ── HEADER ── */
-header {
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 0 28px; height: 58px; display: flex; align-items: center;
-  justify-content: space-between; position: sticky; top: 0; z-index: 100;
-}
-.header-left { display: flex; align-items: center; gap: 20px; }
-.logo { font-family: var(--mono); font-weight: 700; font-size: 17px; color: var(--green); letter-spacing: 4px; }
-.live-pill {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--green-dim); border: 1px solid #00e67630;
-  border-radius: 20px; padding: 4px 12px;
-  font-family: var(--mono); font-size: 10px; color: var(--green); letter-spacing: 2px;
-}
-.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.header-right { display: flex; align-items: center; gap: 16px; }
-.refresh-info { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
-.logout-btn {
-  background: transparent; border: 1px solid var(--border); color: var(--text-dim);
-  padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s;
-}
-.logout-btn:hover { border-color: var(--red); color: var(--red); }
+header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hlogo{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--green);letter-spacing:4px}
+.hlive{display:flex;align-items:center;gap:6px;background:var(--gd);border:1px solid var(--gb);border-radius:20px;padding:3px 10px;font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:2px}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.hright{display:flex;align-items:center;gap:14px}
+.hcnt{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.hout{background:transparent;border:1px solid var(--border);color:var(--dim);padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .2s}
+.hout:hover{border-color:var(--red);color:var(--red)}
+
+/* ── STATS ── */
+.stats{display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.stat{flex:1;background:var(--s1);padding:12px 16px;text-align:center}
+.stat-v{font-family:var(--mono);font-size:22px;font-weight:700}
+.stat-l{font-size:9px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:1.5px}
 
 /* ── TABS ── */
-.tabs {
-  display: flex; background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 0 28px; gap: 4px;
-}
-.tab {
-  padding: 14px 24px; font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px;
-  color: var(--text-dim); cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all 0.2s; text-transform: uppercase; display: flex; align-items: center; gap: 8px;
-}
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--text); border-bottom-color: var(--green); }
-.tab-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-/* ── STATS BAR ── */
-.stats-bar { display: flex; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
-.stat-item { flex: 1; background: var(--surface); padding: 14px 20px; text-align: center; }
-.stat-value { font-family: var(--mono); font-size: 24px; font-weight: 700; }
-.stat-label { font-size: 10px; color: var(--text-dim); margin-top: 3px; text-transform: uppercase; letter-spacing: 1.5px; }
+.tabs{display:flex;background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px;gap:2px}
+.tab{padding:13px 20px;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--green)}
+.tdot{width:6px;height:6px;border-radius:50%}
 
 /* ── CONTROLS ── */
-.controls {
-  padding: 14px 28px; display: flex; gap: 10px; align-items: center;
-  flex-wrap: wrap; border-bottom: 1px solid var(--border);
-}
-.search-box {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-  padding: 9px 14px; color: var(--text); font-family: var(--mono); font-size: 12px;
-  outline: none; width: 180px; transition: border-color 0.2s;
-}
-.search-box:focus { border-color: var(--blue); }
-.filter-btn {
-  background: var(--surface); border: 1px solid var(--border); color: var(--text-dim);
-  padding: 8px 14px; border-radius: 8px; font-size: 11px; font-family: var(--mono);
-  cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
-}
-.filter-btn.f-active { border-color: var(--green); color: var(--green); background: var(--green-dim); }
-.filter-btn.f-buy { border-color: var(--green); color: var(--green); background: var(--green-dim); }
-.filter-btn.f-sell { border-color: var(--red); color: var(--red); background: var(--red-dim); }
-.filter-btn.f-open { border-color: var(--cyan); color: var(--cyan); background: #00e5ff18; }
-.filter-btn.f-super { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
-.filter-btn.f-hit { border-color: var(--red); color: var(--red); background: var(--red-dim); }
-.last-updated { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+.ctrl{padding:14px 24px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.srch{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:var(--mono);font-size:11px;outline:none;width:160px;transition:border-color .2s}
+.srch:focus{border-color:var(--blue)}
+.fbtn{background:var(--s1);border:1px solid var(--border);color:var(--dim);padding:7px 12px;border-radius:8px;font-size:10px;font-family:var(--mono);cursor:pointer;transition:all .2s;letter-spacing:1px}
+.fbtn.fa{border-color:var(--blue);color:var(--blue);background:var(--blued)}
+.fbtn.fb{border-color:var(--green);color:var(--green);background:var(--gd)}
+.fbtn.fc{border-color:var(--red);color:var(--red);background:var(--rd)}
+.fbtn.fd{border-color:var(--gold);color:var(--gold);background:var(--goldd)}
+.lupd{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim)}
 
-/* ── TABLE ── */
-.table-wrap { padding: 0 28px 28px; overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 16px; }
-thead th {
-  background: var(--surface2); padding: 10px 12px; text-align: left;
-  font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-dim);
-  text-transform: uppercase; border-bottom: 1px solid var(--border);
-  white-space: nowrap; cursor: pointer; user-select: none;
-}
-thead th:hover { color: var(--text); }
-tbody tr { border-bottom: 1px solid #1a2535; transition: background 0.15s; }
-tbody tr:hover { background: var(--surface2); }
-td { padding: 11px 12px; white-space: nowrap; font-family: var(--mono); font-size: 12px; }
+/* ── BADGES ── */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:1.5px}
+.b-bull{background:var(--gd);color:var(--green);border:1px solid var(--gb)}
+.b-super{background:var(--goldd);color:var(--gold);border:1px solid var(--goldb)}
+.b-buy{background:var(--gd);color:var(--green);border:1px solid var(--gb)}
+.b-sell{background:var(--rd);color:var(--red);border:1px solid var(--rb)}
+.b-re{background:var(--blued);color:var(--blue);border:1px solid var(--blueb)}
+.b-open{background:#00e5ff15;color:var(--cyan);border:1px solid #00e5ff30}
+.b-sl{background:var(--rd);color:var(--red);border:1px solid var(--rb)}
+.b-t1{background:var(--blued);color:#64b5f6;border:1px solid var(--blueb)}
+.b-t2{background:var(--purpled);color:var(--purple);border:1px solid var(--purpleb)}
+.b-t3{background:var(--goldd);color:var(--gold);border:1px solid var(--goldb)}
+.b-sq{background:#33333318;color:#888;border:1px solid #33333340}
 
-.ticker { font-weight: 700; font-size: 13px; color: var(--text); }
-.sr { color: var(--text-dim); font-size: 11px; }
+/* ══════════════════════════════════════════
+   SYSTEM 1 — SWING CARDS
+══════════════════════════════════════════ */
+.swing-wrap{padding:20px 24px}
+.swing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.scard{background:var(--s1);border-radius:12px;padding:16px;border:1px solid var(--border);position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;cursor:default}
+.scard:hover{transform:translateY(-2px);box-shadow:0 8px 24px #00000040}
+.scard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:12px 0 0 12px}
+.scard.c-open::before{background:var(--green)}
+.scard.c-sl::before{background:var(--red)}
+.scard.c-t1::before{background:#64b5f6}
+.scard.c-t2::before{background:var(--purple)}
+.scard.c-t3::before{background:var(--gold)}
+.scard.c-sq::before{background:#555}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.cticker{font-size:15px;font-weight:700;font-family:var(--mono);letter-spacing:.5px}
+.cprices{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.cpbox{background:var(--bg);border-radius:6px;padding:6px 8px}
+.cplbl{font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:2px;text-transform:uppercase}
+.cpval{font-size:12px;font-family:var(--mono);font-weight:600}
+.ctgts{display:flex;gap:4px;margin-bottom:10px}
+.ctgt{flex:1;text-align:center;padding:5px 2px;border-radius:6px}
+.ctgt .tl{font-size:8px;color:var(--dim);margin-bottom:2px}
+.ctgt .tv{font-size:10px;font-family:var(--mono);font-weight:600}
+.ct1{background:var(--blued)}.ct1 .tv{color:#64b5f6}
+.ct2{background:var(--purpled)}.ct2 .tv{color:var(--purple)}
+.ct3{background:var(--goldd)}.ct3 .tv{color:var(--gold)}
+.cprog{height:3px;background:var(--border);border-radius:2px;margin-top:2px}
+.cprogf{height:100%;border-radius:2px;transition:width .5s}
+.cltp{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.cltpv{font-size:14px;font-family:var(--mono);font-weight:700}
+.cupd{font-size:9px;color:var(--dim)}
 
-/* Signal badges */
-.badge {
-  display: inline-block; padding: 3px 9px; border-radius: 4px;
-  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
-}
-.badge-bullish { background: var(--green-dim); color: var(--green); border: 1px solid #00e67630; }
-.badge-super { background: var(--gold-dim); color: var(--gold); border: 1px solid #ffd60030; }
-.badge-buy { background: var(--green-dim); color: var(--green); border: 1px solid #00e67630; }
-.badge-sell { background: var(--red-dim); color: var(--red); border: 1px solid #ff3d5730; }
-.badge-reentry { background: var(--blue-dim); color: var(--blue); border: 1px solid #2979ff30; }
+/* ══════════════════════════════════════════
+   SYSTEM 2 — INDEX STRIPS
+══════════════════════════════════════════ */
+.index-wrap{padding:16px 24px;display:flex;flex-direction:column;gap:6px}
+.istrip{background:var(--s1);border-radius:8px;padding:13px 16px;display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-left:3px solid;transition:background .15s}
+.istrip:hover{background:var(--s2)}
+.istrip.ib{border-left-color:var(--green)}
+.istrip.is{border-left-color:var(--red)}
+.istrip.iq{border-left-color:#555}
+.ipill{font-size:11px;font-weight:700;font-family:var(--mono);padding:4px 12px;border-radius:6px;background:var(--s2);min-width:76px;text-align:center;letter-spacing:1px}
+.iladder{display:flex;align-items:center;flex:1;gap:0}
+.ilitem{text-align:center;flex:1}
+.ilbl{font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:3px}
+.ival{font-size:12px;font-family:var(--mono);font-weight:600}
+.iv-e{color:var(--text)}
+.iv-sl{color:var(--red)}
+.iv-t1{color:#64b5f6}
+.iv-t2{color:var(--purple)}
+.iv-t3{color:var(--gold)}
+.iarrow{color:var(--border);font-size:14px;padding:0 2px}
+.iright{display:flex;align-items:center;gap:12px;margin-left:auto}
+.iltpv{font-size:14px;font-family:var(--mono);font-weight:700}
+.itime{font-size:9px;color:var(--dim);font-family:var(--mono);margin-top:2px;text-align:right}
 
-/* Status badges */
-.badge-open { background: #00e5ff18; color: var(--cyan); border: 1px solid #00e5ff30; }
-.badge-sl { background: var(--red-dim); color: var(--red); border: 1px solid #ff3d5730; }
-.badge-t1 { background: var(--blue-dim); color: #64b5f6; border: 1px solid #2979ff30; }
-.badge-t2 { background: var(--purple-dim); color: var(--purple); border: 1px solid #b388ff30; }
-.badge-t3 { background: var(--gold-dim); color: var(--gold); border: 1px solid #ffd60030; }
+/* ══════════════════════════════════════════
+   SYSTEM 3 — STOCKS COMPACT
+══════════════════════════════════════════ */
+.stocks-wrap{padding:16px 24px}
+.stbl{background:var(--s1);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.shdr{display:grid;grid-template-columns:100px 55px 80px 75px 75px 75px 75px 1fr;padding:9px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+.shdr span{font-size:8px;color:var(--dim);letter-spacing:1.5px;font-family:var(--mono);text-transform:uppercase}
+.srow{display:grid;grid-template-columns:100px 55px 80px 75px 75px 75px 75px 1fr;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;transition:background .15s}
+.srow:last-child{border-bottom:none}
+.srow:hover{background:var(--s2)}
+.ssym{font-size:12px;font-weight:700;font-family:var(--mono)}
+.smono{font-size:11px;font-family:var(--mono);color:var(--text)}
+.smono-sl{color:var(--red)}
+.smono-t1{color:#64b5f6}
+.smono-t2{color:var(--purple)}
+.smono-t3{color:var(--gold)}
+.snote{font-size:9px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spbar{height:2px;background:var(--border);border-radius:1px;margin-top:3px}
+.spbarf{height:100%;border-radius:1px}
+.stime{font-size:9px;color:var(--dim);font-family:var(--mono)}
 
-.price-sl { color: var(--red); }
-.price-t1 { color: #64b5f6; }
-.price-t2 { color: var(--purple); }
-.price-t3 { color: var(--gold); }
-.price-ltp { font-weight: 600; color: var(--text); }
-.price-entry { color: var(--text); }
-.sl-type { color: var(--text-dim); font-size: 10px; }
-.time-cell { color: var(--text-dim); font-size: 10px; }
+/* ── LOADING / EMPTY ── */
+.loading{text-align:center;padding:60px;color:var(--dim);font-family:var(--mono);font-size:12px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:60px;color:var(--dim);font-family:var(--mono);font-size:12px}
 
-/* Progress bar */
-.prog-wrap { width: 60px; height: 3px; background: var(--border); border-radius: 2px; margin-top: 4px; }
-.prog-bar { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.5s; }
+/* ── TOAST ── */
+.toast{position:fixed;top:66px;right:20px;background:var(--s1);border:1px solid var(--green);border-radius:10px;padding:14px 18px;font-family:var(--mono);font-size:11px;color:var(--green);z-index:999;transform:translateX(130%);transition:transform .3s ease;max-width:300px;box-shadow:0 8px 32px #00000060}
+.toast.show{transform:translateX(0)}
+.toast-t{font-size:14px;font-weight:700;margin-bottom:4px}
+.toast-d{color:var(--dim);font-size:10px;line-height:1.6}
 
-/* Loading / Empty */
-.loading { text-align: center; padding: 60px; color: var(--text-dim); font-family: var(--mono); font-size: 13px; }
-.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 10px; vertical-align: middle; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty { text-align: center; padding: 60px; color: var(--text-dim); font-family: var(--mono); font-size: 13px; }
-.error-msg { color: var(--red); text-align: center; padding: 40px; font-family: var(--mono); font-size: 12px; line-height: 2; }
-
-/* Toast */
-.toast {
-  position: fixed; top: 70px; right: 24px;
-  background: var(--surface); border: 1px solid var(--green);
-  border-radius: 12px; padding: 16px 20px; font-family: var(--mono);
-  font-size: 12px; color: var(--green); z-index: 999;
-  transform: translateX(130%); transition: transform 0.3s ease; max-width: 320px;
-  box-shadow: 0 8px 32px #00000060;
-}
-.toast.show { transform: translateX(0); }
-.toast-ticker { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-.toast-detail { color: var(--text-dim); font-size: 11px; line-height: 1.6; }
-
-/* No sheet configured */
-.no-sheet {
-  text-align: center; padding: 80px 40px; font-family: var(--mono);
-}
-.no-sheet-icon { font-size: 48px; margin-bottom: 20px; }
-.no-sheet-title { color: var(--text); font-size: 16px; margin-bottom: 10px; }
-.no-sheet-sub { color: var(--text-dim); font-size: 12px; line-height: 2; }
-.no-sheet-url { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-top: 20px; font-size: 11px; color: var(--cyan); word-break: break-all; }
-
-@media (max-width: 768px) {
-  header { padding: 0 16px; }
-  .tabs { padding: 0 16px; }
-  .controls { padding: 12px 16px; }
-  .table-wrap { padding: 0 8px 16px; }
-  .tab { padding: 12px 14px; font-size: 10px; }
-  .logo { font-size: 14px; }
+@media(max-width:768px){
+  .swing-grid{grid-template-columns:1fr}
+  .iladder{display:none}
+  .shdr,.srow{grid-template-columns:90px 50px 70px 70px 70px}
+  .shdr span:nth-child(n+6),.srow>*:nth-child(n+6){display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">AATI</div>
-    <div class="login-tagline">Trading Signal Dashboard</div>
-    <div class="login-systems">
-      <span class="sys-chip">SWING</span>
-      <span class="sys-chip">INDEX</span>
-      <span class="sys-chip">STOCKS</span>
+<div id="login">
+  <div class="lbox">
+    <div class="llogo">AATI</div>
+    <div class="ltag">Trading Signal Dashboard</div>
+    <div class="lsys">
+      <span class="lchip" style="color:var(--gold)">SWING</span>
+      <span class="lchip" style="color:var(--blue)">INDEX</span>
+      <span class="lchip" style="color:var(--purple)">STOCKS</span>
     </div>
-    <input type="password" id="pwd-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">ENTER DASHBOARD →</button>
-    <div class="login-error" id="login-error">❌ Incorrect password</div>
+    <input type="password" id="pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+    <button class="lbtn" onclick="login()">ENTER DASHBOARD →</button>
+    <div class="lerr" id="lerr">❌ Wrong password</div>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <header>
-    <div class="header-left">
-      <div class="logo">AATI</div>
-      <div class="live-pill"><span class="live-dot"></span>LIVE</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="hlogo">AATI</div>
+      <div class="hlive"><span class="ldot"></span>LIVE</div>
     </div>
-    <div class="header-right">
-      <span class="refresh-info" id="refresh-countdown">Refreshing in 60s</span>
-      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    <div class="hright">
+      <span class="hcnt" id="hcnt">Refreshing in 60s</span>
+      <button class="hout" onclick="logout()">Logout</button>
     </div>
   </header>
 
-  <!-- TABS -->
   <div class="tabs">
     <div class="tab active" id="tab-swing" onclick="switchTab('swing')">
-      <span class="tab-dot" style="background:var(--gold)"></span> Swing Trading
+      <span class="tdot" style="background:var(--gold)"></span>Swing Trading
     </div>
     <div class="tab" id="tab-index" onclick="switchTab('index')">
-      <span class="tab-dot" style="background:var(--blue)"></span> Index Intraday
+      <span class="tdot" style="background:var(--blue)"></span>Index Intraday
     </div>
     <div class="tab" id="tab-stocks" onclick="switchTab('stocks')">
-      <span class="tab-dot" style="background:var(--purple)"></span> Stocks Intraday
+      <span class="tdot" style="background:var(--purple)"></span>Stocks Intraday
     </div>
   </div>
 
-  <!-- CONTENT PANELS -->
+  <!-- SWING -->
   <div id="panel-swing">
-    <div class="stats-bar">
-      <div class="stat-item"><div class="stat-value" id="s1-total" style="color:var(--blue)">—</div><div class="stat-label">Total</div></div>
-      <div class="stat-item"><div class="stat-value" id="s1-open" style="color:var(--cyan)">—</div><div class="stat-label">Open</div></div>
-      <div class="stat-item"><div class="stat-value" id="s1-super" style="color:var(--gold)">—</div><div class="stat-label">Super Bullish</div></div>
-      <div class="stat-item"><div class="stat-value" id="s1-hit" style="color:var(--red)">—</div><div class="stat-label">SL/Target Hit</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-v" id="s1-tot" style="color:var(--blue)">—</div><div class="stat-l">Total</div></div>
+      <div class="stat"><div class="stat-v" id="s1-open" style="color:var(--green)">—</div><div class="stat-l">Open</div></div>
+      <div class="stat"><div class="stat-v" id="s1-super" style="color:var(--gold)">—</div><div class="stat-l">Super Bullish</div></div>
+      <div class="stat"><div class="stat-v" id="s1-hit" style="color:var(--red)">—</div><div class="stat-l">SL/Target Hit</div></div>
     </div>
-    <div class="controls">
-      <input class="search-box" type="text" id="s1-search" placeholder="Search ticker..." oninput="renderSwing()">
-      <button class="filter-btn f-active" id="s1-f-all" onclick="setFilter('swing','all')">ALL</button>
-      <button class="filter-btn" id="s1-f-open" onclick="setFilter('swing','open')">OPEN</button>
-      <button class="filter-btn" id="s1-f-super" onclick="setFilter('swing','super')">SUPER</button>
-      <button class="filter-btn" id="s1-f-hit" onclick="setFilter('swing','hit')">HIT</button>
-      <span class="last-updated" id="s1-updated">—</span>
+    <div class="ctrl">
+      <input class="srch" type="text" id="s1-srch" placeholder="Search ticker..." oninput="renderSwing()">
+      <button class="fbtn fa" id="s1-fa" onclick="setF('swing','all')">ALL</button>
+      <button class="fbtn" id="s1-fo" onclick="setF('swing','open')">OPEN</button>
+      <button class="fbtn" id="s1-fs" onclick="setF('swing','super')">SUPER</button>
+      <button class="fbtn" id="s1-fh" onclick="setF('swing','hit')">HIT</button>
+      <span class="lupd" id="s1-upd">—</span>
     </div>
-    <div class="table-wrap">
-      <div class="loading" id="s1-loading"><span class="spinner"></span>Loading swing signals...</div>
-      <table id="s1-table" style="display:none">
-        <thead><tr>
-          <th>SR#</th><th>TICKER</th><th>SIGNAL</th>
-          <th>BUY LOW</th><th>BUY HIGH</th><th>SL</th><th>SL TYPE</th>
-          <th>T1</th><th>T2</th><th>T3</th><th>STATUS</th><th>LTP</th><th>UPDATED</th>
-        </tr></thead>
-        <tbody id="s1-body"></tbody>
-      </table>
+    <div class="swing-wrap">
+      <div class="loading" id="s1-load"><span class="spinner"></span>Loading swing signals...</div>
+      <div class="swing-grid" id="s1-grid" style="display:none"></div>
       <div class="empty" id="s1-empty" style="display:none">No signals match filter.</div>
     </div>
   </div>
 
+  <!-- INDEX -->
   <div id="panel-index" style="display:none">
-    <div class="stats-bar">
-      <div class="stat-item"><div class="stat-value" id="s2-total" style="color:var(--blue)">—</div><div class="stat-label">Total Signals</div></div>
-      <div class="stat-item"><div class="stat-value" id="s2-buy" style="color:var(--green)">—</div><div class="stat-label">BUY</div></div>
-      <div class="stat-item"><div class="stat-value" id="s2-sell" style="color:var(--red)">—</div><div class="stat-label">SELL</div></div>
-      <div class="stat-item"><div class="stat-value" id="s2-open" style="color:var(--cyan)">—</div><div class="stat-label">Open</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-v" id="s2-tot" style="color:var(--blue)">—</div><div class="stat-l">Total</div></div>
+      <div class="stat"><div class="stat-v" id="s2-buy" style="color:var(--green)">—</div><div class="stat-l">BUY</div></div>
+      <div class="stat"><div class="stat-v" id="s2-sell" style="color:var(--red)">—</div><div class="stat-l">SELL</div></div>
+      <div class="stat"><div class="stat-v" id="s2-open" style="color:var(--cyan)">—</div><div class="stat-l">Open</div></div>
     </div>
-    <div class="controls">
-      <input class="search-box" type="text" id="s2-search" placeholder="NIFTY / SENSEX..." oninput="renderIndex()">
-      <button class="filter-btn f-active" id="s2-f-all" onclick="setFilter('index','all')">ALL</button>
-      <button class="filter-btn" id="s2-f-nifty" onclick="setFilter('index','nifty')">NIFTY</button>
-      <button class="filter-btn" id="s2-f-sensex" onclick="setFilter('index','sensex')">SENSEX</button>
-      <button class="filter-btn" id="s2-f-buy" onclick="setFilter('index','buy')">BUY</button>
-      <button class="filter-btn" id="s2-f-sell" onclick="setFilter('index','sell')">SELL</button>
-      <span class="last-updated" id="s2-updated">—</span>
+    <div class="ctrl">
+      <input class="srch" type="text" id="s2-srch" placeholder="NIFTY / SENSEX..." oninput="renderIndex()">
+      <button class="fbtn fa" id="s2-fa" onclick="setF('index','all')">ALL</button>
+      <button class="fbtn" id="s2-fn" onclick="setF('index','nifty')">NIFTY</button>
+      <button class="fbtn" id="s2-fs2" onclick="setF('index','sensex')">SENSEX</button>
+      <button class="fbtn" id="s2-fb" onclick="setF('index','buy')">BUY</button>
+      <button class="fbtn" id="s2-fsl" onclick="setF('index','sell')">SELL</button>
+      <span class="lupd" id="s2-upd">—</span>
     </div>
-    <div class="table-wrap">
-<div class="loading" id="s2-loading"><span class="spinner"></span>Loading index signals...</div>
-      <table id="s2-table" style="display:none">
-        <thead><tr>
-          <th>#</th><th>TIME</th><th>INSTRUMENT</th><th>SIGNAL</th>
-          <th>ENTRY</th><th>SL</th><th>T1</th><th>T2</th><th>T3</th><th>STATUS</th><th>LTP</th>
-        </tr></thead>
-        <tbody id="s2-body"></tbody>
-      </table>
+    <div class="index-wrap" id="s2-wrap">
+      <div class="loading" id="s2-load"><span class="spinner"></span>Loading index signals...</div>
+      <div id="s2-list" style="display:none;flex-direction:column;gap:6px"></div>
       <div class="empty" id="s2-empty" style="display:none">No signals match filter.</div>
     </div>
   </div>
 
+  <!-- STOCKS -->
   <div id="panel-stocks" style="display:none">
-    <div class="stats-bar">
-      <div class="stat-item"><div class="stat-value" id="s3-total" style="color:var(--blue)">—</div><div class="stat-label">Total</div></div>
-      <div class="stat-item"><div class="stat-value" id="s3-buy" style="color:var(--green)">—</div><div class="stat-label">BUY</div></div>
-      <div class="stat-item"><div class="stat-value" id="s3-sell" style="color:var(--red)">—</div><div class="stat-label">SELL</div></div>
-      <div class="stat-item"><div class="stat-value" id="s3-open" style="color:var(--cyan)">—</div><div class="stat-label">Open</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-v" id="s3-tot" style="color:var(--blue)">—</div><div class="stat-l">Total</div></div>
+      <div class="stat"><div class="stat-v" id="s3-buy" style="color:var(--green)">—</div><div class="stat-l">BUY</div></div>
+      <div class="stat"><div class="stat-v" id="s3-sell" style="color:var(--red)">—</div><div class="stat-l">SELL</div></div>
+      <div class="stat"><div class="stat-v" id="s3-open" style="color:var(--cyan)">—</div><div class="stat-l">Active</div></div>
     </div>
-    <div class="controls">
-      <input class="search-box" type="text" id="s3-search" placeholder="Search symbol..." oninput="renderStocks()">
-      <button class="filter-btn f-active" id="s3-f-all" onclick="setFilter('stocks','all')">ALL</button>
-      <button class="filter-btn" id="s3-f-buy" onclick="setFilter('stocks','buy')">BUY</button>
-      <button class="filter-btn" id="s3-f-sell" onclick="setFilter('stocks','sell')">SELL</button>
-      <button class="filter-btn" id="s3-f-open" onclick="setFilter('stocks','open')">OPEN</button>
-      <button class="filter-btn" id="s3-f-hit" onclick="setFilter('stocks','hit')">HIT</button>
-      <span class="last-updated" id="s3-updated">—</span>
+    <div class="ctrl">
+      <input class="srch" type="text" id="s3-srch" placeholder="Search symbol..." oninput="renderStocks()">
+      <button class="fbtn fa" id="s3-fa" onclick="setF('stocks','all')">ALL</button>
+      <button class="fbtn" id="s3-fb" onclick="setF('stocks','buy')">BUY</button>
+      <button class="fbtn" id="s3-fs" onclick="setF('stocks','sell')">SELL</button>
+      <span class="lupd" id="s3-upd">—</span>
     </div>
-    <div class="table-wrap">
-<div class="loading" id="s3-loading"><span class="spinner"></span>Loading stock signals...</div>
-      <table id="s3-table" style="display:none">
-        <thead><tr>
-          <th>#</th><th>TIME</th><th>SYMBOL</th><th>SIGNAL</th>
-          <th>ENTRY</th><th>SL</th><th>T1</th><th>T2</th><th>T3</th><th>STATUS</th><th>LTP</th><th>HOLD</th>
-        </tr></thead>
-        <tbody id="s3-body"></tbody>
-      </table>
+    <div class="stocks-wrap">
+      <div class="loading" id="s3-load"><span class="spinner"></span>Loading stock signals...</div>
+      <div class="stbl" id="s3-tbl" style="display:none">
+        <div class="shdr">
+          <span>SYMBOL</span><span>SIGNAL</span><span>ENTRY</span>
+          <span>SL</span><span>T1</span><span>T2</span><span>T3</span><span>NOTES / PROGRESS</span>
+        </div>
+        <div id="s3-body"></div>
+      </div>
       <div class="empty" id="s3-empty" style="display:none">No signals match filter.</div>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">
-  <div class="toast-ticker" id="toast-ticker"></div>
-  <div class="toast-detail" id="toast-detail"></div>
+  <div class="toast-t" id="toast-t"></div>
+  <div class="toast-d" id="toast-d"></div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-//  CONFIG — Edit these values
-// ═══════════════════════════════════════════════
-const PASSWORD = 'aati2024';
-const REFRESH_INTERVAL = 60; // seconds
+// ═══════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════
+const PWD = 'aati2024';
+const REFRESH = 60;
 
-// System 1 — Swing Trading (WORKING ✅)
-const SHEET_URL_SWING = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRlr5LyXwYS37GdhVy6ubwU-sUrag7svIQ2RhLowOZhjushuEFfXNuPwV5j5jgp4CSR8M_vWEZeHX9p/pub?gid=676589290&single=true&output=csv';
+const SHEET_SWING   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRlr5LyXwYS37GdhVy6ubwU-sUrag7svIQ2RhLowOZhjushuEFfXNuPwV5j5jgp4CSR8M_vWEZeHX9p/pub?gid=676589290&single=true&output=csv';
+const SHEET_INDEX   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQlvIXCFqvW_ziZIK10CacMYRlrg-x_jGHXGrnIEE5drPiC4lrZXQ7el4rS-Fi9Cs5o3cZEr-prZ0KM/pub?gid=0&single=true&output=csv';
+const SHEET_STOCKS  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSArjpdWydBBxH31EdoflFqFk2jIn-HBgBPl-18tdiUdUWqDsqda6bW4gaYTxG6LESdO4JbqLwX1GX4/pub?gid=0&single=true&output=csv';
+// ═══════════════════════════════════════════
 
-// System 2 — Index Intraday (NIFTY/SENSEX) — Paste your CSV URL here
-const SHEET_URL_INDEX = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQlvIXCFqvW_ziZIK10CacMYRlrg-x_jGHXGrnIEE5drPiC4lrZXQ7el4rS-Fi9Cs5o3cZEr-prZ0KM/pub?gid=0&single=true&output=csv';
-
-// System 3 — Stocks Intraday/2-3 day — Paste your CSV URL here
-const SHEET_URL_STOCKS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSArjpdWydBBxH31EdoflFqFk2jIn-HBgBPl-18tdiUdUWqDsqda6bW4gaYTxG6LESdO4JbqLwX1GX4/pub?gid=0&single=true&output=csv';
-// ═══════════════════════════════════════════════
-
-let data = { swing: [], index: [], stocks: [] };
-let filters = { swing: 'all', index: 'all', stocks: 'all' };
+let D = {swing:[],index:[],stocks:[]};
+let F = {swing:'all',index:'all',stocks:'all'};
 let activeTab = 'swing';
-let countdown = REFRESH_INTERVAL;
-let prevTickers = { swing: new Set(), index: new Set(), stocks: new Set() };
+let cnt = REFRESH;
+let prevT = {swing:new Set(),index:new Set(),stocks:new Set()};
 
-// ── AUTH ──
-function doLogin() {
-  if (document.getElementById('pwd-input').value === PASSWORD) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    sessionStorage.setItem('aati_auth', '1');
-    initApp();
+// AUTH
+function login(){
+  if(document.getElementById('pwd').value===PWD){
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    sessionStorage.setItem('aati','1');
+    init();
   } else {
-    document.getElementById('login-error').style.display = 'block';
-    document.getElementById('pwd-input').value = '';
+    document.getElementById('lerr').style.display='block';
+    document.getElementById('pwd').value='';
   }
 }
-function doLogout() {
-  sessionStorage.removeItem('aati_auth');
-  location.reload();
-}
-if (sessionStorage.getItem('aati_auth') === '1') {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  initApp();
+function logout(){sessionStorage.removeItem('aati');location.reload()}
+if(sessionStorage.getItem('aati')==='1'){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  init();
 }
 
-// ── INIT ──
-function initApp() {
+function init(){
   fetchAll();
-  setInterval(fetchAll, REFRESH_INTERVAL * 1000);
-  setInterval(() => {
-    countdown--;
-    if (countdown <= 0) countdown = REFRESH_INTERVAL;
-    document.getElementById('refresh-countdown').textContent = `Refreshing in ${countdown}s`;
-  }, 1000);
+  setInterval(fetchAll,REFRESH*1000);
+  setInterval(()=>{cnt--;if(cnt<=0)cnt=REFRESH;document.getElementById('hcnt').textContent=`Refreshing in ${cnt}s`},1000);
 }
 
-// ── TABS ──
-function switchTab(tab) {
-  activeTab = tab;
-  ['swing','index','stocks'].forEach(t => {
-    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
-    document.getElementById(`panel-${t}`).style.display = t === tab ? 'block' : 'none';
+function switchTab(t){
+  activeTab=t;
+  ['swing','index','stocks'].forEach(x=>{
+    document.getElementById(`tab-${x}`).classList.toggle('active',x===t);
+    document.getElementById(`panel-${x}`).style.display=x===t?'block':'none';
   });
 }
 
-// ── FETCH ALL ──
-async function fetchAll() {
-  countdown = REFRESH_INTERVAL;
-  fetchSheet('swing', SHEET_URL_SWING);
-  if (SHEET_URL_INDEX) fetchSheet('index', SHEET_URL_INDEX);
-  if (SHEET_URL_STOCKS) fetchSheet('stocks', SHEET_URL_STOCKS);
+async function fetchAll(){
+  cnt=REFRESH;
+  fetchSheet('swing',SHEET_SWING);
+  fetchSheet('index',SHEET_INDEX);
+  fetchSheet('stocks',SHEET_STOCKS);
 }
 
-async function fetchSheet(system, url) {
-  if (!url) return;
-  try {
-    const res = await fetch(url);
-    const text = await res.text();
-    parseSheet(system, text);
-  } catch(e) {
-    console.error(`${system} fetch error:`, e);
-    document.getElementById(`s${sysNum(system)}-updated`).textContent = `Error: ${e.message}`;
+async function fetchSheet(sys,url){
+  try{
+    const r=await fetch(url);
+    const t=await r.text();
+    parseSheet(sys,t);
+  }catch(e){
+    const n=sysN(sys);
+    document.getElementById(`s${n}-upd`).textContent=`Error: ${e.message}`;
   }
 }
 
-function sysNum(s) { return {swing:1,index:2,stocks:3}[s]; }
+function sysN(s){return{swing:1,index:2,stocks:3}[s]}
 
-// ── PARSE CSV ──
-function parseSheet(system, text) {
-  const n = sysNum(system);
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return;
+function parseCSV(line){
+  const res=[];let cur='';let q=false;
+  for(const c of line){
+    if(c==='"')q=!q;
+    else if(c===','&&!q){res.push(cur);cur='';}
+    else cur+=c;
+  }
+  res.push(cur);
+  return res;
+}
 
-  let headerIdx = 0;
-  for (let i = 0; i < Math.min(5, lines.length); i++) {
-    if (lines[i].toUpperCase().includes('TICKER') || lines[i].toUpperCase().includes('SYMBOL') ||
-        lines[i].toUpperCase().includes('INSTRUMENT')) { headerIdx = i; break; }
+function parseSheet(sys,text){
+  const n=sysN(sys);
+  const lines=text.trim().split('\n');
+  if(lines.length<2)return;
+
+  let hi=0;
+  for(let i=0;i<Math.min(5,lines.length);i++){
+    const u=lines[i].toUpperCase();
+    if(u.includes('TICKER')||u.includes('SYMBOL')||u.includes('INSTRUMENT')||u.includes('TIMESTAMP'))
+    {hi=i;break;}
   }
 
-  const headers = parseCSVLine(lines[headerIdx]).map(h => h.trim().toUpperCase().replace(/[^A-Z0-9]/g,''));
-  const col = name => headers.findIndex(h => h.includes(name));
+  const hdrs=parseCSV(lines[hi]).map(h=>h.trim().toUpperCase().replace(/[^A-Z0-9]/g,''));
+  const col=name=>hdrs.findIndex(h=>h.includes(name));
 
-  const rows = [];
-  for (let i = headerIdx + 1; i < lines.length; i++) {
-    const row = parseCSVLine(lines[i]);
+  const rows=[];
 
-    // ── System 3: Stocks (Timestamp, Symbol, Event, Signal...) ──
-    if (system === 'stocks') {
-      const sym = row[col('SYMBOL')] || '';
-      if (!sym.trim()) continue;
-      const event = row[col('EVENT')] || '';
-      if (event === 'STARTUP' || event === 'SHUTDOWN') continue; // skip system events
+  for(let i=hi+1;i<lines.length;i++){
+    const row=parseCSV(lines[i]);
+
+    if(sys==='stocks'){
+      const sym=row[col('SYMBOL')]||'';
+      if(!sym.trim())continue;
+      const ev=(row[col('EVENT')]||'').toUpperCase();
+      if(ev==='STARTUP'||ev==='SHUTDOWN'||ev==='')continue;
+      const sig=(row[col('SIGNAL')]||'').toUpperCase();
+      if(!sig)continue;
       rows.push({
-        sr:      i,
-        ticker:  sym.trim(),
-        signal:  row[col('SIGNAL')] || '',
-        buyLow:  parseFloat(row[col('ENTRY')]) || 0,
-        buyHigh: 0,
-        sl:      parseFloat(row[col('SL')]) || 0,
-        slType:  row[col('EVENT')] || '',
-        t1:      parseFloat(row[col('T1')]) || 0,
-        t2:      parseFloat(row[col('T2')]) || 0,
-        t3:      parseFloat(row[col('T3')]) || 0,
-        status:  row[col('EVENT')] || '',
-        ltp:     parseFloat(row[col('LTP')]) || 0,
-        updated: row[col('TIMESTAMP')] || row[0] || '',
-        hold:    row[col('PNL')] || row[col('PNLPOINTS')] || '',
-        notes:   row[col('NOTES')] || '',
+        ticker:sym.trim(),
+        signal:sig,
+        buyLow:parseFloat(row[col('ENTRY')])||0,
+        sl:parseFloat(row[col('SL')])||0,
+        t1:parseFloat(row[col('T1')])||0,
+        t2:parseFloat(row[col('T2')])||0,
+        t3:parseFloat(row[col('T3')])||0,
+        status:ev,
+        ltp:0,
+        notes:row[col('NOTES')]||'',
+        updated:row[0]||'',
       });
       continue;
     }
 
-    // ── System 1 & 2: Swing / Index (Sr, Date, Entry Time, Instrument...) ──
-    const ticker = row[col('TICKER')] || row[col('INSTRUMENT')] || row[col('SYMBOL')] || '';
-    if (!ticker.trim()) continue;
-
-    const slIdx = col('SL');
-    const slTypeIdx = headers.findIndex((h,j) => (h.includes('SLTYPE') || h.includes('TYPE')) && j > slIdx);
-
+    // Swing & Index
+    const ticker=row[col('TICKER')]||row[col('INSTRUMENT')]||row[col('SYMBOL')]||'';
+    if(!ticker.trim())continue;
+    const date=row[col('DATE')]||'';
+    const etime=row[col('ENTRYTIME')]||row[col('TIME')]||'';
     rows.push({
-      sr:      row[col('SR')] || row[0] || i,
-      ticker:  ticker.trim(),
-      signal:  row[col('SIGNAL')] || row[col('ITS')] || '',
-      buyLow:  parseFloat(row[col('BUYLOW')] || row[col('BUYL')] || row[col('ENTRY')]) || 0,
-      buyHigh: parseFloat(row[col('BUYHIGH')] || row[col('BUYH')]) || 0,
-      sl:      parseFloat(row[slIdx]) || 0,
-      slType:  slTypeIdx >= 0 ? (row[slTypeIdx] || '') : '',
-      t1:      parseFloat(row[col('T1')]) || 0,
-      t2:      parseFloat(row[col('T2')]) || 0,
-      t3:      parseFloat(row[col('T3')]) || 0,
-      status:  row[col('STATUS')] || '',
-      ltp:     parseFloat(row[col('LTP')]) || 0,
-      updated: [row[col('DATE')], row[col('ENTRYTIME')] || row[col('TIME')]].filter(Boolean).join(' ') || row[col('LAST')] || row[col('UPD')] || '',
-      hold:    row[col('HOLD')] || row[col('DAYS')] || '',
+      sr:row[col('SR')]||row[0]||i,
+      ticker:ticker.trim(),
+      signal:row[col('SIGNAL')]||row[col('ITS')]||'',
+      buyLow:parseFloat(row[col('BUYLOW')]||row[col('BUYL')]||row[col('ENTRY')])||0,
+      buyHigh:parseFloat(row[col('BUYHIGH')]||row[col('BUYH')])||0,
+      sl:parseFloat(row[col('SL')])||0,
+      slType:row[col('SLTYPE')]||'',
+      t1:parseFloat(row[col('T1')])||0,
+      t2:parseFloat(row[col('T2')])||0,
+      t3:parseFloat(row[col('T3')])||0,
+      status:row[col('STATUS')]||'',
+      ltp:parseFloat(row[col('LTP')])||0,
+      updated:[date,etime].filter(Boolean).join(' ')||row[col('LAST')]||'',
     });
   }
 
-  // Detect new signals
-  const newTickers = new Set(rows.map(r => r.ticker));
-  if (prevTickers[system].size > 0) {
-    newTickers.forEach(t => {
-      if (!prevTickers[system].has(t)) {
-        const sig = rows.find(r => r.ticker === t);
-        if (sig) showToast(sig, system);
+  // Detect new
+  const newT=new Set(rows.map(r=>r.ticker));
+  if(prevT[sys].size>0){
+    newT.forEach(t=>{
+      if(!prevT[sys].has(t)){
+        const s=rows.find(r=>r.ticker===t);
+        if(s)showToast(s,sys);
       }
     });
   }
-  prevTickers[system] = newTickers;
-  data[system] = rows;
-
-  updateStats(system);
-  if (system === 'swing') renderSwing();
-  if (system === 'index') renderIndex();
-  if (system === 'stocks') renderStocks();
-
-  const now = new Date();
-  document.getElementById(`s${n}-updated`).textContent =
-    `Updated ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
-
-  document.getElementById(`s${n}-loading`).style.display = 'none';
-  document.getElementById(`s${n}-table`).style.display = 'table';
+  prevT[sys]=newT;
+  D[sys]=rows;
+  updateStats(sys);
+  if(sys==='swing')renderSwing();
+  if(sys==='index')renderIndex();
+  if(sys==='stocks')renderStocks();
+  const now=new Date();
+  document.getElementById(`s${n}-upd`).textContent=`Updated ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
 }
 
-function parseCSVLine(line) {
-  const result = []; let cur = ''; let inQ = false;
-  for (const c of line) {
-    if (c === '"') inQ = !inQ;
-    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
-    else cur += c;
-  }
-  result.push(cur);
-  return result;
-}
-
-// ── STATS ──
-function updateStats(system) {
-  const n = sysNum(system);
-  const d = data[system];
-  if (system === 'swing') {
-    document.getElementById('s1-total').textContent = d.length;
-    document.getElementById('s1-open').textContent  = d.filter(r => r.status.toUpperCase() === 'OPEN').length;
-    document.getElementById('s1-super').textContent = d.filter(r => r.signal.toUpperCase().includes('SUPER')).length;
-    document.getElementById('s1-hit').textContent   = d.filter(r => r.status.toUpperCase().includes('HIT')).length;
+function updateStats(sys){
+  const n=sysN(sys),d=D[sys];
+  if(sys==='swing'){
+    document.getElementById('s1-tot').textContent=d.length;
+    document.getElementById('s1-open').textContent=d.filter(r=>r.status.toUpperCase()==='OPEN').length;
+    document.getElementById('s1-super').textContent=d.filter(r=>r.signal.toUpperCase().includes('SUPER')).length;
+    document.getElementById('s1-hit').textContent=d.filter(r=>r.status.toUpperCase().includes('HIT')).length;
+  } else if(sys==='index'){
+    document.getElementById('s2-tot').textContent=d.length;
+    document.getElementById('s2-buy').textContent=d.filter(r=>r.signal.toUpperCase().includes('BUY')).length;
+    document.getElementById('s2-sell').textContent=d.filter(r=>r.signal.toUpperCase().includes('SELL')).length;
+    document.getElementById('s2-open').textContent=d.filter(r=>(r.status||'').toUpperCase()==='OPEN').length;
   } else {
-    document.getElementById(`s${n}-total`).textContent = d.length;
-    document.getElementById(`s${n}-buy`).textContent   = d.filter(r => r.signal.toUpperCase().includes('BUY')).length;
-    document.getElementById(`s${n}-sell`).textContent  = d.filter(r => r.signal.toUpperCase().includes('SELL')).length;
-    document.getElementById(`s${n}-open`).textContent  = d.filter(r => r.status.toUpperCase() === 'OPEN').length;
+    document.getElementById('s3-tot').textContent=d.length;
+    document.getElementById('s3-buy').textContent=d.filter(r=>r.signal.includes('BUY')).length;
+    document.getElementById('s3-sell').textContent=d.filter(r=>r.signal.includes('SELL')).length;
+    document.getElementById('s3-open').textContent=d.filter(r=>r.status==='NEW ENTRY').length;
   }
 }
 
-// ── FILTERS ──
-function setFilter(system, f) {
-  filters[system] = f;
-  const n = sysNum(system);
-  document.querySelectorAll(`#panel-${system} .filter-btn`).forEach(b => {
-    b.className = 'filter-btn';
-  });
-  const btn = document.getElementById(`s${n}-f-${f}`);
-  if (btn) btn.classList.add(`f-${f === 'all' ? 'active' : f}`);
-  if (system === 'swing') renderSwing();
-  if (system === 'index') renderIndex();
-  if (system === 'stocks') renderStocks();
+function setF(sys,f){
+  F[sys]=f;
+  const n=sysN(sys);
+  document.querySelectorAll(`#panel-${sys} .fbtn`).forEach(b=>b.className='fbtn');
+  const map={swing:{all:'s1-fa',open:'s1-fo',super:'s1-fs',hit:'s1-fh'},
+             index:{all:'s2-fa',nifty:'s2-fn',sensex:'s2-fs2',buy:'s2-fb',sell:'s2-fsl'},
+             stocks:{all:'s3-fa',buy:'s3-fb',sell:'s3-fs'}};
+  const bid=map[sys][f];
+  if(bid){const b=document.getElementById(bid);b.className='fbtn fa';}
+  if(sys==='swing')renderSwing();
+  if(sys==='index')renderIndex();
+  if(sys==='stocks')renderStocks();
 }
 
-// ── RENDER HELPERS ──
-function signalBadge(sig) {
-  const s = sig.toUpperCase();
-  if (s.includes('SUPER')) return `<span class="badge badge-super">SUPER BULLISH</span>`;
-  if (s.includes('BUY') || s.includes('BULLISH')) return `<span class="badge badge-buy">BUY</span>`;
-  if (s.includes('SELL') || s.includes('BEARISH')) return `<span class="badge badge-sell">SELL</span>`;
-  if (s.includes('REENTRY')) return `<span class="badge badge-reentry">REENTRY</span>`;
-  return `<span class="badge" style="background:var(--surface2);color:var(--text-dim)">${sig}</span>`;
-}
-
-function statusBadge(st) {
-  const s = st.toUpperCase();
-  if (s === 'OPEN') return `<span class="badge badge-open">OPEN</span>`;
-  if (s.includes('SL')) return `<span class="badge badge-sl">SL HIT</span>`;
-  if (s.includes('T3')) return `<span class="badge badge-t3">T3 HIT</span>`;
-  if (s.includes('T2')) return `<span class="badge badge-t2">T2 HIT</span>`;
-  if (s.includes('T1')) return `<span class="badge badge-t1">T1 HIT</span>`;
-  return `<span class="badge" style="color:var(--text-dim)">${st || '—'}</span>`;
-}
-
-function fmt(n) { return n ? n.toFixed(2) : '—'; }
-
-function progress(ltp, sl, t1) {
-  if (!ltp || !sl || !t1 || t1 <= sl) return 0;
-  return Math.min(100, Math.max(0, ((ltp - sl) / (t1 - sl)) * 100));
-}
-
-function filterData(system) {
-  const f = filters[system];
-  const search = document.getElementById(`s${sysNum(system)}-search`).value.toLowerCase();
-  return data[system].filter(d => {
-    if (search && !d.ticker.toLowerCase().includes(search)) return false;
-    const s = d.signal.toUpperCase(), st = d.status.toUpperCase();
-    if (f === 'open')   return st === 'OPEN';
-    if (f === 'hit')    return st.includes('HIT');
-    if (f === 'super')  return s.includes('SUPER');
-    if (f === 'buy')    return s.includes('BUY');
-    if (f === 'sell')   return s.includes('SELL');
-    if (f === 'nifty')  return d.ticker.toUpperCase().includes('NIFTY');
-    if (f === 'sensex') return d.ticker.toUpperCase().includes('SENSEX');
+function filterD(sys){
+  const f=F[sys];
+  const srch=document.getElementById(`s${sysN(sys)}-srch`).value.toLowerCase();
+  return D[sys].filter(d=>{
+    if(srch&&!d.ticker.toLowerCase().includes(srch))return false;
+    const s=d.signal.toUpperCase(),st=(d.status||'').toUpperCase();
+    if(f==='open')return st==='OPEN'||st==='NEW ENTRY';
+    if(f==='hit')return st.includes('HIT');
+    if(f==='super')return s.includes('SUPER');
+    if(f==='buy')return s.includes('BUY');
+    if(f==='sell')return s.includes('SELL');
+    if(f==='nifty')return d.ticker.toUpperCase().includes('NIFTY');
+    if(f==='sensex')return d.ticker.toUpperCase().includes('SENSEX');
     return true;
   });
 }
 
-// ── RENDER SWING ──
-function renderSwing() {
-  const rows = filterData('swing');
-  const tbody = document.getElementById('s1-body');
-  const empty = document.getElementById('s1-empty');
-  if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display = 'none';
-  tbody.innerHTML = rows.map(d => `<tr>
-    <td class="sr">${d.sr}</td>
-    <td class="ticker">${d.ticker}</td>
-    <td>${signalBadge(d.signal)}</td>
-    <td class="price-entry">${fmt(d.buyLow)}</td>
-    <td class="price-entry">${fmt(d.buyHigh)}</td>
-    <td class="price-sl">${fmt(d.sl)}</td>
-    <td class="sl-type">${d.slType||'—'}</td>
-    <td class="price-t1">${fmt(d.t1)}</td>
-    <td class="price-t2">${fmt(d.t2)}</td>
-    <td class="price-t3">${fmt(d.t3)}</td>
-    <td>${statusBadge(d.status)}</td>
-    <td><div class="price-ltp">${fmt(d.ltp)}</div><div class="prog-wrap"><div class="prog-bar" style="width:${progress(d.ltp,d.sl,d.t1)}%"></div></div></td>
-    <td class="time-cell">${d.updated||'—'}</td>
-  </tr>`).join('');
+function fmt(n){return n?n.toFixed(2):'—'}
+
+function prog(ltp,sl,t1){
+  if(!ltp||!sl||!t1||t1<=sl)return 0;
+  return Math.min(100,Math.max(0,((ltp-sl)/(t1-sl))*100));
 }
 
-// ── RENDER INDEX ──
-function renderIndex() {
-  const rows = filterData('index');
-  const tbody = document.getElementById('s2-body');
-  const empty = document.getElementById('s2-empty');
-  if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display = 'none';
-  tbody.innerHTML = rows.map((d,i) => `<tr>
-    <td class="sr">${i+1}</td>
-    <td class="time-cell">${d.updated||'—'}</td>
-    <td class="ticker">${d.ticker}</td>
-    <td>${signalBadge(d.signal)}</td>
-    <td class="price-entry">${fmt(d.buyLow)}</td>
-    <td class="price-sl">${fmt(d.sl)}</td>
-    <td class="price-t1">${fmt(d.t1)}</td>
-    <td class="price-t2">${fmt(d.t2)}</td>
-    <td class="price-t3">${fmt(d.t3)}</td>
-    <td>${statusBadge(d.status)}</td>
-    <td>
-      <div class="price-ltp">${fmt(d.ltp)}</div>
-      <div class="prog-wrap"><div class="prog-bar" style="width:${progress(d.ltp,d.sl,d.t1)}%"></div></div>
-    </td>
-  </tr>`).join('');
+function sigBadge(sig){
+  const s=sig.toUpperCase();
+  if(s.includes('SUPER'))return`<span class="badge b-super">SUPER</span>`;
+  if(s.includes('BUY')||s.includes('BULLISH'))return`<span class="badge b-buy">BUY</span>`;
+  if(s.includes('SELL')||s.includes('BEARISH'))return`<span class="badge b-sell">SELL</span>`;
+  if(s.includes('REENTRY')||s.includes('RE-ENTRY'))return`<span class="badge b-re">REENTRY</span>`;
+  return`<span class="badge" style="background:var(--s2);color:var(--dim)">${sig}</span>`;
 }
 
-// ── RENDER STOCKS ──
+function stBadge(st){
+  const s=st.toUpperCase();
+  if(s==='OPEN'||s==='NEW ENTRY')return`<span class="badge b-open">OPEN</span>`;
+  if(s.includes('SL'))return`<span class="badge b-sl">SL HIT</span>`;
+  if(s.includes('T3'))return`<span class="badge b-t3">T3 HIT</span>`;
+  if(s.includes('T2'))return`<span class="badge b-t2">T2 HIT</span>`;
+  if(s.includes('T1'))return`<span class="badge b-t1">T1 HIT</span>`;
+  if(s.includes('SQUARE')||s.includes('SQUARED'))return`<span class="badge b-sq">SQUARED</span>`;
+  return`<span class="badge" style="color:var(--dim)">${st||'—'}</span>`;
+}
 
-// ── RENDER STOCKS ──
-function renderStocks() {
-  const rows = filterData('stocks');
-  const tbody = document.getElementById('s3-body');
-  const empty = document.getElementById('s3-empty');
-  if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display = 'none';
-  tbody.innerHTML = rows.map((d,i) => `<tr>
-    <td class="sr">${i+1}</td>
-    <td class="time-cell">${d.updated||'—'}</td>
-    <td class="ticker">${d.ticker}</td>
-    <td>${signalBadge(d.signal)}</td>
-    <td class="price-entry">${fmt(d.buyLow)}</td>
-    <td class="price-sl">${fmt(d.sl)}</td>
-    <td class="price-t1">${fmt(d.t1)}</td>
-    <td class="price-t2">${fmt(d.t2)}</td>
-    <td class="price-t3">${fmt(d.t3)}</td>
-    <td>${statusBadge(d.status)}</td>
-    <td><div class="price-ltp">${fmt(d.ltp) !== '—' ? fmt(d.ltp) : '—'}</div><div class="prog-wrap"><div class="prog-bar" style="width:${progress(d.ltp,d.sl,d.t1)}%"></div></div></td>
-    <td class="sl-type" style="font-size:10px;color:var(--text-dim);max-width:200px;white-space:normal">${d.notes||d.hold||'—'}</td>
-  </tr>`).join('');
+function cardClass(st){
+  const s=(st||'').toUpperCase();
+  if(s==='OPEN')return'c-open';
+  if(s.includes('SL'))return'c-sl';
+  if(s.includes('T1'))return'c-t1';
+  if(s.includes('T2'))return'c-t2';
+  if(s.includes('T3'))return'c-t3';
+  return'c-sq';
+}
+
+// ── RENDER SWING (CARDS) ──
+function renderSwing(){
+  const rows=filterD('swing');
+  const grid=document.getElementById('s1-grid');
+  const load=document.getElementById('s1-load');
+  const empty=document.getElementById('s1-empty');
+  load.style.display='none';
+  if(!rows.length){grid.style.display='none';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.style.display='grid';
+  const ltpColor=d=>{
+    const st=(d.status||'').toUpperCase();
+    if(st.includes('SL'))return'var(--red)';
+    if(st.includes('T3'))return'var(--gold)';
+    if(st.includes('T2'))return'var(--purple)';
+    if(st.includes('T1'))return'#64b5f6';
+    return'var(--text)';
+  };
+  const progColor=d=>{
+    const st=(d.status||'').toUpperCase();
+    if(st.includes('SL'))return'var(--red)';
+    if(st.includes('T'))return'var(--gold)';
+    return'var(--green)';
+  };
+  grid.innerHTML=rows.map(d=>`
+  <div class="scard ${cardClass(d.status)}">
+    <div class="ctop">
+      <div>
+        <div class="cticker">${d.ticker}</div>
+        <div style="margin-top:4px">${sigBadge(d.signal)}</div>
+      </div>
+      ${stBadge(d.status)}
+    </div>
+    <div class="cprices">
+      <div class="cpbox">
+        <div class="cplbl">BUY LOW</div>
+        <div class="cpval" style="color:var(--green)">${fmt(d.buyLow)}</div>
+      </div>
+      <div class="cpbox">
+        <div class="cplbl">BUY HIGH</div>
+        <div class="cpval" style="color:var(--green)">${fmt(d.buyHigh)}</div>
+      </div>
+      <div class="cpbox">
+        <div class="cplbl">STOP LOSS</div>
+        <div class="cpval" style="color:var(--red)">${fmt(d.sl)}</div>
+      </div>
+      <div class="cpbox">
+        <div class="cplbl">SL TYPE</div>
+        <div class="cpval" style="color:var(--dim);font-size:11px">${d.slType||'—'}</div>
+      </div>
+    </div>
+    <div class="ctgts">
+      <div class="ctgt ct1"><div class="tl">T1</div><div class="tv">${fmt(d.t1)}</div></div>
+      <div class="ctgt ct2"><div class="tl">T2</div><div class="tv">${fmt(d.t2)}</div></div>
+      <div class="ctgt ct3"><div class="tl">T3</div><div class="tv">${fmt(d.t3)}</div></div>
+    </div>
+    <div class="cltp">
+      <div>
+        <div style="font-size:9px;color:var(--dim);margin-bottom:2px">LTP</div>
+        <div class="cltpv" style="color:${ltpColor(d)}">${fmt(d.ltp)||'—'}</div>
+      </div>
+      <div style="font-size:9px;color:var(--dim);text-align:right">${d.updated||'—'}</div>
+    </div>
+    <div style="margin-top:8px">
+      <div class="cprog"><div class="cprogf" style="width:${prog(d.ltp,d.sl,d.t1)}%;background:${progColor(d)}"></div></div>
+    </div>
+  </div>`).join('');
+}
+
+// ── RENDER INDEX (STRIPS) ──
+function renderIndex(){
+  const rows=filterD('index');
+  const list=document.getElementById('s2-list');
+  const load=document.getElementById('s2-load');
+  const empty=document.getElementById('s2-empty');
+  load.style.display='none';
+  if(!rows.length){list.style.display='none';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.style.display='flex';
+  list.innerHTML=rows.map(d=>{
+    const isBuy=d.signal.toUpperCase().includes('BUY');
+    const cls=isBuy?'ib':'is';
+    const ic=isBuy?'var(--green)':'var(--red)';
+    const ltpC=isBuy?'var(--green)':'var(--red)';
+    return`
+    <div class="istrip ${cls}">
+      <span class="ipill" style="color:${ic}">${d.ticker}</span>
+      ${sigBadge(d.signal)}
+      <div class="iladder">
+        <div class="ilitem"><div class="ilbl">ENTRY</div><div class="ival iv-e">${fmt(d.buyLow)}</div></div>
+        <span class="iarrow">›</span>
+        <div class="ilitem"><div class="ilbl">SL</div><div class="ival iv-sl">${fmt(d.sl)}</div></div>
+        <span class="iarrow">›</span>
+        <div class="ilitem"><div class="ilbl">T1</div><div class="ival iv-t1">${fmt(d.t1)}</div></div>
+        <span class="iarrow">›</span>
+        <div class="ilitem"><div class="ilbl">T2</div><div class="ival iv-t2">${fmt(d.t2)}</div></div>
+        <span class="iarrow">›</span>
+        <div class="ilitem"><div class="ilbl">T3</div><div class="ival iv-t3">${fmt(d.t3)}</div></div>
+      </div>
+      <div class="iright">
+        ${stBadge(d.status)}
+        <div style="text-align:right">
+          <div class="iltpv" style="color:${ltpC}">${fmt(d.ltp)||'—'}</div>
+          <div class="itime">${d.updated||'—'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── RENDER STOCKS (COMPACT TABLE) ──
+function renderStocks(){
+  const rows=filterD('stocks');
+  const tbl=document.getElementById('s3-tbl');
+  const body=document.getElementById('s3-body');
+  const load=document.getElementById('s3-load');
+  const empty=document.getElementById('s3-empty');
+  load.style.display='none';
+  if(!rows.length){tbl.style.display='none';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbl.style.display='block';
+  body.innerHTML=rows.map(d=>{
+    const isBuy=d.signal.toUpperCase().includes('BUY');
+    const sc=isBuy?'var(--green)':'var(--red)';
+    const pc=isBuy?'var(--green)':'var(--red)';
+    const p=prog(d.ltp,d.sl,d.t1);
+    return`
+    <div class="srow">
+      <span class="ssym" style="color:${sc}">${d.ticker}</span>
+      ${sigBadge(d.signal)}
+      <span class="smono">${fmt(d.buyLow)}</span>
+      <span class="smono smono-sl">${fmt(d.sl)}</span>
+      <span class="smono smono-t1">${fmt(d.t1)}</span>
+      <span class="smono smono-t2">${fmt(d.t2)}</span>
+      <span class="smono smono-t3">${fmt(d.t3)}</span>
+      <div>
+        <div class="snote">${d.notes||d.updated||'—'}</div>
+        <div class="spbar"><div class="spbarf" style="width:${p}%;background:${pc}"></div></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ── TOAST ──
-function showToast(sig, system) {
-  const labels = {swing:'🟡 SWING',index:'🔵 INDEX',stocks:'🟣 STOCKS'};
-  document.getElementById('toast-ticker').textContent = `${labels[system]} · ${sig.ticker}`;
-  document.getElementById('toast-detail').textContent =
-    `${sig.signal} | Entry: ${fmt(sig.buyLow)} | SL: ${fmt(sig.sl)} | T1: ${fmt(sig.t1)}`;
-  const t = document.getElementById('toast');
+function showToast(sig,sys){
+  const labels={swing:'🟡',index:'🔵',stocks:'🟣'};
+  document.getElementById('toast-t').textContent=`${labels[sys]} ${sig.ticker} · ${sig.signal}`;
+  document.getElementById('toast-d').textContent=`Entry: ${fmt(sig.buyLow)} | SL: ${fmt(sig.sl)} | T1: ${fmt(sig.t1)}`;
+  const t=document.getElementById('toast');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 5000);
-  if (Notification.permission === 'granted') {
-    new Notification(`AATI · ${sig.ticker}`, {
-      body: `${sig.signal} | Entry: ${fmt(sig.buyLow)} | SL: ${fmt(sig.sl)}`
-    });
-  } else if (Notification.permission !== 'denied') {
+  setTimeout(()=>t.classList.remove('show'),5000);
+  if(Notification.permission==='granted'){
+    new Notification(`AATI · ${sig.ticker}`,{body:`${sig.signal} | Entry: ${fmt(sig.buyLow)} | SL: ${fmt(sig.sl)}`});
+  } else if(Notification.permission!=='denied'){
     Notification.requestPermission();
   }
 }

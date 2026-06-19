@@ -476,27 +476,30 @@ function parseSheet(sys,text){
         updated:row[0]||'',
       });
     } else if(sys==='index'){
-      // Columns: Sr, Date, Entry Time, Instrument, Signal, Entry Price, SL, T1, T2, T3, Status, LTP, LTP Time, Notes
-      const inst=row[col('INSTRUMENT')]||row[col('SYMBOL')]||'';
-      if(!inst.trim())continue;
-      const entryPrice=parseFloat(row[col('ENTRY')])||0;
+      // FIXED column positions (0-indexed):
+      // A(0):Sr | B(1):Date | C(2):Entry Time | D(3):Instrument | E(4):Signal
+      // F(5):Entry Price | G(6):SL | H(7):T1 | I(8):T2 | J(9):T3
+      // K(10):Status | L(11):LTP | M(12):LTP Time | N(13):Notes
+      const inst=(row[3]||'').trim();
+      if(!inst)continue;
+      const entryPrice=parseFloat(row[5])||0;
       if(!entryPrice)continue;
       rows.push({
         sr:row[0]||i,
-        date:row[col('DATE')]||'',
-        entryTime:row[col('ENTRYTIME')]||row[col('TIME')]||'',
-        ticker:inst.trim(),
-        signal:(row[col('SIGNAL')]||'').toUpperCase(),
+        date:(row[1]||'').trim(),
+        entryTime:(row[2]||'').trim(),
+        ticker:inst,
+        signal:(row[4]||'').toUpperCase().trim(),
         entry:entryPrice,
-        sl:parseFloat(row[col('SL')])||0,
-        t1:parseFloat(row[col('T1')])||0,
-        t2:parseFloat(row[col('T2')])||0,
-        t3:parseFloat(row[col('T3')])||0,
-        status:(row[col('STATUS')]||'').toUpperCase(),
-        ltp:parseFloat(row[col('LTP')])||0,
-        ltpTime:row[col('LTPTIME')]||row[col('LTPTIME')]||'',
-        remark:row[col('NOTES')]||'',
-        updated:row[col('DATE')]||'',
+        sl:parseFloat(row[6])||0,
+        t1:parseFloat(row[7])||0,
+        t2:parseFloat(row[8])||0,
+        t3:parseFloat(row[9])||0,
+        status:(row[10]||'').toUpperCase().trim(),
+        ltp:parseFloat(row[11])||0,
+        ltpTime:(row[12]||'').trim(),
+        remark:(row[13]||'').trim(),
+        updated:(row[1]||'').trim(),
       });
     } else {
       // SWING — Cols: SR#, TICKER, ITS SIGNAL, BUY LOW, BUY HIGH, SL, SL TYPE, T1, T2, T3, STATUS, LTP, LAST UPDATED, ...T, U(% MOVED), V(ENTRY TIME — not available so skip)

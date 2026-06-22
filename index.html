@@ -481,11 +481,11 @@ function parseSheet(sys,text){
       // F(5):Entry Price | G(6):SL | H(7):T1 | I(8):T2 | J(9):T3
       // K(10):Status | L(11):LTP | M(12):LTP Time | N(13):Notes
       const inst=(row[3]||'').trim();
-      if(!inst||inst.toLowerCase()==='instrument')continue; // skip header
+      if(!inst)continue;
       const entryPrice=parseFloat(row[5])||0;
       if(!entryPrice)continue;
       rows.push({
-        sr:(row[0]||'').trim(),
+        sr:row[0]||i,
         date:(row[1]||'').trim(),
         entryTime:(row[2]||'').trim(),
         ticker:inst,
@@ -502,36 +502,28 @@ function parseSheet(sys,text){
         updated:(row[1]||'').trim(),
       });
     } else {
-      // SWING — Fixed column positions (0-indexed):
-      // A(0):STOCK NAME | B(1):TICKER | C(2):ITS SIGNAL | D(3):D/ | E(4):W/ | F(5):M/
-      // G(6):BUY LOW | H(7):BUY HIGH | I(8):SL | J(9):SL TYPE
-      // K(10):T1 | L(11):T2 | M(12):T3 | N(13):STATUS | O(14):LTP
-      // P(15):LAST UPDATE | Q(16):% MOVE | R(17):PEAK PRICE | S(18):for TS
-      // T(19):STATUS TIMESTAMP | U(20):% MOVED | V(21):ENTRY TIME
-      const ticker=(row[1]||'').trim();
-      if(!ticker)continue;
-      const signal=(row[2]||'').toUpperCase().trim();
-      if(!signal||signal==='ITS SIGNAL')continue; // skip header rows
-      const buyLow=parseFloat(row[6])||0;
-      if(!buyLow)continue;
-      const pct=parseFloat(row[20])||0;
+      // SWING — Cols: SR#, TICKER, ITS SIGNAL, BUY LOW, BUY HIGH, SL, SL TYPE, T1, T2, T3, STATUS, LTP, LAST UPDATED, ...T, U(% MOVED), V(ENTRY TIME — not available so skip)
+      const ticker=row[col('TICKER')]||'';
+      if(!ticker.trim())continue;
+      const pctRaw=row[col('MOVED')]||row[col('MOVE')]||'';
+      const pct=parseFloat(pctRaw)||0;
       rows.push({
-        sr:row[0]||i,
-        ticker:ticker,
-        signal:signal,
-        buyLow:buyLow,
-        buyHigh:parseFloat(row[7])||0,
-        sl:parseFloat(row[8])||0,
-        slType:(row[9]||'').trim(),
-        t1:parseFloat(row[10])||0,
-        t2:parseFloat(row[11])||0,
-        t3:parseFloat(row[12])||0,
-        status:(row[13]||'').toUpperCase().trim(),
-        ltp:parseFloat(row[14])||0,
-        lastUpdated:(row[15]||'').trim(),
-        statusTs:(row[19]||'').trim(),
+        sr:row[col('SR')]||row[0]||i,
+        ticker:ticker.trim(),
+        signal:(row[col('SIGNAL')]||row[col('ITS')]||'').toUpperCase(),
+        buyLow:parseFloat(row[col('BUYLOW')]||row[col('BUYL')]||row[col('ENTRY')])||0,
+        buyHigh:parseFloat(row[col('BUYHIGH')]||row[col('BUYH')])||0,
+        sl:parseFloat(row[col('SL')])||0,
+        slType:row[col('SLTYPE')]||row[col('TYPE')]||'',
+        t1:parseFloat(row[col('T1')])||0,
+        t2:parseFloat(row[col('T2')])||0,
+        t3:parseFloat(row[col('T3')])||0,
+        status:(row[col('STATUS')]||'').toUpperCase(),
+        ltp:parseFloat(row[col('LTP')])||0,
+        lastUpdated:row[col('LAST')]||row[col('LASTUPDATED')]||'',
+        statusTs:row[col('STATUSTIMESTAMP')]||row[col('STATUST')]||row[19]||'',
         pctMoved:pct,
-        updated:(row[15]||'').trim(),
+        updated:row[col('DATE')]||'',
       });
     }
   }

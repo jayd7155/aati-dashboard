@@ -37,6 +37,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 /* APP */
 #app{display:none}
 
+/* REGISTER (one-time per device) */
+#reg{display:none;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(180deg,#eef1f6 0%,var(--bg) 60%)}
+#reg .lbox input{text-align:left;letter-spacing:normal;font-size:14px;padding:12px 14px}
+#reg .regnote{font-size:10px;color:var(--dim2);text-align:left;margin:-6px 0 16px;line-height:1.6}
+
 /* HEADER */
 header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .hlogo{font-family:var(--sans);font-weight:800;font-size:16px;color:var(--navy);letter-spacing:3px}
@@ -267,6 +272,19 @@ header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px
   </div>
 </div>
 
+<div id="reg">
+  <div class="lbox" style="width:420px">
+    <div class="llogo">AATI</div>
+    <div class="ltag">Quick one-time signup</div>
+    <input type="text" id="reg-name" placeholder="Full name">
+    <input type="email" id="reg-email" placeholder="Email address">
+    <input type="tel" id="reg-phone" placeholder="Phone number">
+    <div class="regnote">We store this so the team can see who's using the dashboard and how often. Kept in an internal sheet only — asked once per device.</div>
+    <button class="lbtn" onclick="doRegister()">CONTINUE →</button>
+    <div class="lerr" id="regerr">Please fill in all fields with a valid email.</div>
+  </div>
+</div>
+
 <div id="app">
   <header>
     <div style="display:flex;align-items:center;gap:14px">
@@ -428,6 +446,8 @@ const SHEET_SWING  ='https://docs.google.com/spreadsheets/d/e/2PACX-1vRlr5LyXwYS
 const SHEET_SWING_EXITED='https://docs.google.com/spreadsheets/d/e/2PACX-1vRlr5LyXwYS37GdhVy6ubwU-sUrag7svIQ2RhLowOZhjushuEFfXNuPwV5j5jgp4CSR8M_vWEZeHX9p/pub?gid=330675253&single=true&output=csv';
 const SHEET_INDEX  ='https://docs.google.com/spreadsheets/d/e/2PACX-1vQlvIXCFqvW_ziZIK10CacMYRlrg-x_jGHXGrnIEE5drPiC4lrZXQ7el4rS-Fi9Cs5o3cZEr-prZ0KM/pub?gid=0&single=true&output=csv';
 const SHEET_STOCKS ='https://docs.google.com/spreadsheets/d/e/2PACX-1vSArjpdWydBBxH31EdoflFqFk2jIn-HBgBPl-18tdiUdUWqDsqda6bW4gaYTxG6LESdO4JbqLwX1GX4/pub?gid=0&single=true&output=csv';
+// Paste the Web App URL from your deployed Apps Script (see AATI-Tracking-AppsScript.gs)
+const GAS_URL = https://script.google.com/macros/s/AKfycbwE0iHqgmyMBQrF3beEJT_uiAcKBFHUy_1iv2xuscgZhC9uDtF17ujGoxP6mS9MAyY/exec;
 // ══════════════════════
 
 let D={swing:[],swingExited:[],index:[],stocks:[]};
@@ -439,26 +459,88 @@ let prevT={swing:new Set(),index:new Set(),stocks:new Set()};
 let swingTile=null;       // null (combined) | 'open' | 'targets' | 'exited'
 let swingSig=null;        // null | 'bull' | 'super'
 
+// ── USAGE TRACKING ──
+let sessionId=null,sessionStart=null;
+
+function getDeviceId(){
+  let id=localStorage.getItem('aati_device_id');
+  if(!id){id='dev_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);localStorage.setItem('aati_device_id',id);}
+  return id;
+}
+function getUserInfo(){
+  try{return JSON.parse(localStorage.getItem('aati_user_info')||'null');}catch(e){return null;}
+}
+function trackReady(){return GAS_URL && !GAS_URL.includes('PASTE_YOUR');}
+function sendTrack(action,extra){
+  if(!trackReady())return;
+  const payload=Object.assign({action,deviceId:getDeviceId()},extra||{});
+  try{fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});}catch(e){}
+}
+function sendBeaconTrack(action,extra){
+  if(!trackReady())return;
+  const payload=Object.assign({action,deviceId:getDeviceId()},extra||{});
+  try{navigator.sendBeacon(GAS_URL,new Blob([JSON.stringify(payload)],{type:'text/plain'}));}catch(e){}
+}
+function startSession(){
+  const u=getUserInfo()||{};
+  sessionId='ses_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  sessionStart=Date.now();
+  sendTrack('login',{sessionId,name:u.name,email:u.email,loginTime:sessionStart});
+  setInterval(()=>sendTrack('heartbeat',{sessionId,ts:Date.now()}),60000);
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='hidden')sendBeaconTrack('end',{sessionId,ts:Date.now()});
+  });
+  window.addEventListener('pagehide',()=>sendBeaconTrack('end',{sessionId,ts:Date.now()}));
+}
+
 // AUTH
 function doLogin(){
   if(document.getElementById('pwd').value===PWD){
     document.getElementById('login').style.display='none';
-    document.getElementById('app').style.display='block';
     sessionStorage.setItem('aati','1');
-    init();
+    proceedAfterPassword();
   }else{
     document.getElementById('lerr').style.display='block';
     document.getElementById('pwd').value='';
   }
 }
-function doLogout(){sessionStorage.removeItem('aati');location.reload()}
-if(sessionStorage.getItem('aati')==='1'){
-  document.getElementById('login').style.display='none';
+function proceedAfterPassword(){
+  if(getUserInfo()){
+    document.getElementById('app').style.display='block';
+    init();
+  }else{
+    document.getElementById('reg').style.display='flex';
+  }
+}
+function doRegister(){
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const phoneOk=phone.replace(/[^0-9]/g,'').length>=7;
+  if(!name||!emailOk||!phoneOk){
+    document.getElementById('regerr').style.display='block';
+    return;
+  }
+  const info={name,email,phone};
+  localStorage.setItem('aati_user_info',JSON.stringify(info));
+  sendTrack('register',info);
+  document.getElementById('reg').style.display='none';
   document.getElementById('app').style.display='block';
   init();
 }
+function doLogout(){
+  if(sessionId)sendBeaconTrack('end',{sessionId,ts:Date.now()});
+  sessionStorage.removeItem('aati');
+  location.reload();
+}
+if(sessionStorage.getItem('aati')==='1'){
+  document.getElementById('login').style.display='none';
+  proceedAfterPassword();
+}
 
 function init(){
+  startSession();
   fetchAll();
   setInterval(fetchAll,REFRESH*1000);
   setInterval(()=>{cnt--;if(cnt<=0)cnt=REFRESH;document.getElementById('hcnt').textContent=`Refreshing in ${cnt}s`;},1000);

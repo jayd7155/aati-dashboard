@@ -157,6 +157,9 @@ header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px
 .sc-ltp-time{font-size:10px;font-family:var(--mono);color:var(--dim2);margin-top:2px}
 .sc-moved{font-size:14px;font-family:var(--mono);font-weight:700;text-align:right;display:flex;align-items:center;gap:4px}
 .sc-moved-lbl{font-size:9px;color:var(--dim2);letter-spacing:1.2px;text-transform:uppercase;font-weight:700;margin-bottom:3px;text-align:right}
+.sc-exit{padding:12px 18px;display:flex;justify-content:space-between;align-items:center;background:var(--goldd)}
+.sc-exit-lbl{font-size:9px;color:#8a6d1a;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;margin-bottom:3px}
+.sc-exit-val{font-size:12px;font-family:var(--sans);font-weight:600;color:#8a6d1a}
 
 /* left accent bar keyed to status */
 .sc{position:relative}
@@ -169,6 +172,24 @@ header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px
 .sc.ac-t3::before{background:var(--goldfill)}
 .sc.ac-tp::before{background:var(--green)}
 .sc.ac-sq::before{background:var(--dim)}
+
+/* ════════════════════════════════
+   SWING TILES + SUBCONTROLS
+════════════════════════════════ */
+.tiles{display:flex;gap:12px;padding:16px 24px;background:var(--s1);border-bottom:1px solid var(--border)}
+.tile{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;cursor:pointer;transition:all .15s;text-align:center}
+.tile:hover{border-color:var(--dim2)}
+.tile-v{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--navy);line-height:1}
+.tile-l{font-size:10px;color:var(--dim2);margin-top:5px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.tile.sel{border-color:var(--navy);background:var(--navyd)}
+.tile.sel .tile-v{color:var(--navy)}
+.tile.sel.t-open{border-color:var(--blue);background:var(--blued)}
+.tile.sel.t-open .tile-v{color:var(--blue)}
+.tile.sel.t-targets{border-color:var(--goldfill);background:var(--goldd)}
+.tile.sel.t-targets .tile-v{color:#8a6d1a}
+.tile.sel.t-exited{border-color:var(--red);background:var(--rd)}
+.tile.sel.t-exited .tile-v{color:var(--red)}
+.dtpick{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:var(--sans);font-size:11px;outline:none;cursor:pointer}
 
 /* ════════════════════════════════
    INDEX — STRIPS
@@ -225,6 +246,7 @@ header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px
   .is-mid{overflow-x:auto}
   header{padding:0 16px}
   .ctrl{padding:10px 16px}
+  .tiles{flex-wrap:wrap}
 }
 </style>
 </head>
@@ -271,27 +293,43 @@ header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px
       <div class="stat"><div class="stat-v" id="s1-super" style="color:var(--goldfill)">—</div><div class="stat-l">Super Bullish</div></div>
       <div class="stat"><div class="stat-v" id="s1-hit" style="color:var(--red)">—</div><div class="stat-l">SL / Hit</div></div>
     </div>
+
+    <!-- Operational tiles: click = filter, click again = back to combined view -->
+    <div class="tiles">
+      <div class="tile t-open" id="s1-tile-open" onclick="setTile('open')">
+        <div class="tile-v" id="s1-tv-open">—</div>
+        <div class="tile-l">Open</div>
+      </div>
+      <div class="tile t-targets" id="s1-tile-targets" onclick="setTile('targets')">
+        <div class="tile-v" id="s1-tv-targets">—</div>
+        <div class="tile-l">Targets Hit</div>
+      </div>
+      <div class="tile t-exited" id="s1-tile-exited" onclick="setTile('exited')">
+        <div class="tile-v" id="s1-tv-exited">—</div>
+        <div class="tile-l">Exited</div>
+      </div>
+    </div>
+
     <div class="ctrl">
       <input class="srch" type="text" id="s1-srch" placeholder="Search ticker..." oninput="renderSwing()">
+      <input class="dtpick" type="date" id="s1-date" onchange="renderSwing()">
+      <button class="fbtn" id="s1-dateclear" onclick="document.getElementById('s1-date').value='';renderSwing()">Clear date</button>
       <div class="fdiv"></div>
-      <button class="fbtn on-navy" id="s1-fall" onclick="setF('swing','all')">ALL</button>
-      <button class="fbtn" id="s1-fopen" onclick="setF('swing','open')">OPEN</button>
-      <button class="fbtn" id="s1-fsl" onclick="setF('swing','sl')">SL HIT</button>
-      <button class="fbtn" id="s1-ftsl" onclick="setF('swing','tsl')">TSL HIT</button>
-      <button class="fbtn" id="s1-ft1" onclick="setF('swing','t1')">T1 HIT</button>
-      <button class="fbtn" id="s1-ft2" onclick="setF('swing','t2')">T2 HIT</button>
-      <button class="fbtn" id="s1-ft3" onclick="setF('swing','t3')">T3 HIT</button>
-      <button class="fbtn" id="s1-ftp" onclick="setF('swing','tp')">TARGETS+</button>
-      <div class="fdiv"></div>
-      <button class="fbtn" id="s1-fbull" onclick="setF('swing','bull')">BULLISH</button>
-      <button class="fbtn" id="s1-fsuper" onclick="setF('swing','super')">SUPER</button>
-      <div class="fdiv"></div>
-      <select class="fsel" id="s1-fdate" onchange="renderSwing()">
-        <option value="all">All Dates</option>
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
+      <select class="fsel" id="s1-fexited" onchange="renderSwing()">
+        <option value="all">Exited: All</option>
+        <option value="sl">SL Hit</option>
+        <option value="tsl">TSL Hit</option>
       </select>
+      <select class="fsel" id="s1-ftargets" onchange="renderSwing()">
+        <option value="all">Targets: All</option>
+        <option value="t1">T1</option>
+        <option value="t2">T2</option>
+        <option value="t3">T3</option>
+        <option value="tp">Targets+</option>
+      </select>
+      <div class="fdiv"></div>
+      <button class="fbtn" id="s1-fbull" onclick="toggleSig('bull')">BULLISH</button>
+      <button class="fbtn" id="s1-fsuper" onclick="toggleSig('super')">SUPER</button>
       <span class="lupd" id="s1-upd">—</span>
     </div>
     <div class="swing-wrap">
@@ -387,14 +425,19 @@ header{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px
 const PWD='aati2024';
 const REFRESH=60;
 const SHEET_SWING  ='https://docs.google.com/spreadsheets/d/e/2PACX-1vRlr5LyXwYS37GdhVy6ubwU-sUrag7svIQ2RhLowOZhjushuEFfXNuPwV5j5jgp4CSR8M_vWEZeHX9p/pub?gid=676589290&single=true&output=csv';
+const SHEET_SWING_EXITED='https://docs.google.com/spreadsheets/d/e/2PACX-1vRlr5LyXwYS37GdhVy6ubwU-sUrag7svIQ2RhLowOZhjushuEFfXNuPwV5j5jgp4CSR8M_vWEZeHX9p/pub?gid=330675253&single=true&output=csv';
 const SHEET_INDEX  ='https://docs.google.com/spreadsheets/d/e/2PACX-1vQlvIXCFqvW_ziZIK10CacMYRlrg-x_jGHXGrnIEE5drPiC4lrZXQ7el4rS-Fi9Cs5o3cZEr-prZ0KM/pub?gid=0&single=true&output=csv';
 const SHEET_STOCKS ='https://docs.google.com/spreadsheets/d/e/2PACX-1vSArjpdWydBBxH31EdoflFqFk2jIn-HBgBPl-18tdiUdUWqDsqda6bW4gaYTxG6LESdO4JbqLwX1GX4/pub?gid=0&single=true&output=csv';
 // ══════════════════════
 
-let D={swing:[],index:[],stocks:[]};
-let F={swing:'all',index:'all',stocks:'all'};
+let D={swing:[],swingExited:[],index:[],stocks:[]};
+let F={index:'all',stocks:'all'};
 let activeTab='swing',cnt=REFRESH;
 let prevT={swing:new Set(),index:new Set(),stocks:new Set()};
+
+// swing operational state
+let swingTile=null;       // null (combined) | 'open' | 'targets' | 'exited'
+let swingSig=null;        // null | 'bull' | 'super'
 
 // AUTH
 function doLogin(){
@@ -432,6 +475,7 @@ function switchTab(t){
 async function fetchAll(){
   cnt=REFRESH;
   fetchSheet('swing',SHEET_SWING);
+  fetchSheet('swingExited',SHEET_SWING_EXITED);
   fetchSheet('index',SHEET_INDEX);
   fetchSheet('stocks',SHEET_STOCKS);
 }
@@ -442,11 +486,13 @@ async function fetchSheet(sys,url){
     const t=await r.text();
     parseSheet(sys,t);
   }catch(e){
-    document.getElementById(`s${sN(sys)}-upd`).textContent='Fetch error: '+e.message;
+    const id=`s${sN(sys)}-upd`;
+    const el=document.getElementById(id);
+    if(el)el.textContent='Fetch error: '+e.message;
   }
 }
 
-function sN(s){return{swing:1,index:2,stocks:3}[s]}
+function sN(s){return{swing:1,swingExited:1,index:2,stocks:3}[s]}
 
 function csv(line){
   const res=[];let c='';let q=false;
@@ -457,6 +503,36 @@ function csv(line){
   }
   res.push(c.trim());
   return res;
+}
+
+// shared row parser for the swing-style sheets (ITS Signals Auto + Exited Trades) —
+// same header-matched columns, Exited Trades adds one trailing "Exit reason" column.
+function parseSwingRow(row,col,isExited){
+  const ticker=row[col('TICKER')]||'';
+  if(!ticker.trim())return null;
+  const pctRaw=row[col('MOVED')]||row[col('MOVE')]||'';
+  const pct=parseFloat(pctRaw)||0;
+  const out={
+    sr:row[col('SR')]||row[0]||0,
+    ticker:ticker.trim(),
+    signal:(row[col('SIGNAL')]||row[col('ITS')]||'').toUpperCase(),
+    buyLow:parseFloat(row[col('BUYLOW')]||row[col('BUYL')]||row[col('ENTRY')])||0,
+    buyHigh:parseFloat(row[col('BUYHIGH')]||row[col('BUYH')])||0,
+    sl:parseFloat(row[col('SL')])||0,
+    slType:row[col('SLTYPE')]||row[col('TYPE')]||'',
+    t1:parseFloat(row[col('T1')])||0,
+    t2:parseFloat(row[col('T2')])||0,
+    t3:parseFloat(row[col('T3')])||0,
+    status:(row[col('STATUS')]||'').toUpperCase(),
+    ltp:parseFloat(row[col('LTP')])||0,
+    lastUpdated:row[col('LAST')]||row[col('LASTUPDATED')]||'',
+    statusTs:row[col('STATUSTIMESTAMP')]||row[col('STATUST')]||row[19]||'',
+    entryTime:row[20]||'', // Column U — entry time
+    pctMoved:pct,
+    updated:row[col('DATE')]||'',
+    exitReason:isExited?(row[col('EXITREASON')]||row[col('EXIT')]||''):'',
+  };
+  return out;
 }
 
 function parseSheet(sys,text){
@@ -502,10 +578,6 @@ function parseSheet(sys,text){
         updated:row[0]||'',
       });
     } else if(sys==='index'){
-      // FIXED column positions (0-indexed):
-      // A(0):Sr | B(1):Date | C(2):Entry Time | D(3):Instrument | E(4):Signal
-      // F(5):Entry Price | G(6):SL | H(7):T1 | I(8):T2 | J(9):T3
-      // K(10):Status | L(11):LTP | M(12):LTP Time | N(13):Notes
       const inst=(row[3]||'').trim();
       if(!inst)continue;
       const entryPrice=parseFloat(row[5])||0;
@@ -527,51 +599,36 @@ function parseSheet(sys,text){
         remark:(row[13]||'').trim(),
         updated:(row[1]||'').trim(),
       });
-    } else {
-      // SWING — header-matched columns, plus FIXED col U (index 20) = Entry Time
-      const ticker=row[col('TICKER')]||'';
-      if(!ticker.trim())continue;
-      const pctRaw=row[col('MOVED')]||row[col('MOVE')]||'';
-      const pct=parseFloat(pctRaw)||0;
-      rows.push({
-        sr:row[col('SR')]||row[0]||i,
-        ticker:ticker.trim(),
-        signal:(row[col('SIGNAL')]||row[col('ITS')]||'').toUpperCase(),
-        buyLow:parseFloat(row[col('BUYLOW')]||row[col('BUYL')]||row[col('ENTRY')])||0,
-        buyHigh:parseFloat(row[col('BUYHIGH')]||row[col('BUYH')])||0,
-        sl:parseFloat(row[col('SL')])||0,
-        slType:row[col('SLTYPE')]||row[col('TYPE')]||'',
-        t1:parseFloat(row[col('T1')])||0,
-        t2:parseFloat(row[col('T2')])||0,
-        t3:parseFloat(row[col('T3')])||0,
-        status:(row[col('STATUS')]||'').toUpperCase(),
-        ltp:parseFloat(row[col('LTP')])||0,
-        lastUpdated:row[col('LAST')]||row[col('LASTUPDATED')]||'',
-        statusTs:row[col('STATUSTIMESTAMP')]||row[col('STATUST')]||row[19]||'',
-        entryTime:row[20]||'', // Column U — ITS SIGNAL SHEET entry time
-        pctMoved:pct,
-        updated:row[col('DATE')]||'',
-      });
+    } else if(sys==='swing'||sys==='swingExited'){
+      const parsed=parseSwingRow(row,col,sys==='swingExited');
+      if(parsed)rows.push(parsed);
     }
   }
 
-  const newT=new Set(rows.map(r=>r.ticker));
-  if(prevT[sys].size>0){
-    newT.forEach(t=>{
-      if(!prevT[sys].has(t)){
-        const s=rows.find(r=>r.ticker===t);
-        if(s)showToast(s,sys);
+  if(sys==='swing'||sys==='swingExited'||sys==='index'||sys==='stocks'){
+    const newT=new Set(rows.map(r=>r.ticker));
+    const key=sys==='swingExited'?'swing':sys; // group swing+exited toasts under same tracker key namespace
+    if(sys!=='swingExited'){
+      if(prevT[key]&&prevT[key].size>0){
+        newT.forEach(t=>{
+          if(!prevT[key].has(t)){
+            const s=rows.find(r=>r.ticker===t);
+            if(s)showToast(s,sys);
+          }
+        });
       }
-    });
+      prevT[key]=newT;
+    }
   }
-  prevT[sys]=newT;
+
   D[sys]=rows;
   updateStats(sys);
-  if(sys==='swing')renderSwing();
+  if(sys==='swing'||sys==='swingExited')renderSwing();
   if(sys==='index')renderIndex();
   if(sys==='stocks')renderStocks();
   const now=new Date();
-  document.getElementById(`s${sN(sys)}-upd`).textContent=`Updated ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+  const updEl=document.getElementById(`s${sN(sys)}-upd`);
+  if(updEl)updEl.textContent=`Updated ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
 }
 
 function cleanRemark(note){
@@ -585,13 +642,29 @@ function cleanRemark(note){
   return cleaned||note;
 }
 
+// does this swing status represent "targets hit" (cumulative — T2 selection includes T3/Targets+ rows too)
+function isTargetsStatus(status){
+  const s=(status||'').toUpperCase();
+  return s.includes('T1')||s.includes('T2')||s.includes('T3')||s.includes('TARGETS+');
+}
+function isExitedStatus(status){
+  const s=(status||'').toUpperCase();
+  return s.includes('SL HIT')||s.includes('TRAIL')||s.includes('TSL');
+}
+
 function updateStats(sys){
   const d=D[sys];
-  if(sys==='swing'){
-    document.getElementById('s1-tot2').textContent=d.length;
-    document.getElementById('s1-open').textContent=d.filter(r=>r.status==='OPEN').length;
-    document.getElementById('s1-super').textContent=d.filter(r=>r.signal.includes('SUPER')).length;
-    document.getElementById('s1-hit').textContent=d.filter(r=>r.status.includes('HIT')||r.status.includes('TARGETS')).length;
+  if(sys==='swing'||sys==='swingExited'){
+    const open=D.swing.filter(r=>r.status==='OPEN').length;
+    const targets=D.swing.filter(r=>isTargetsStatus(r.status)).length;
+    const exited=D.swingExited.length;
+    document.getElementById('s1-tot2').textContent=D.swing.length+D.swingExited.length;
+    document.getElementById('s1-open').textContent=open;
+    document.getElementById('s1-super').textContent=D.swing.filter(r=>r.signal.includes('SUPER')).length;
+    document.getElementById('s1-hit').textContent=targets+D.swingExited.filter(r=>r.status.includes('SL HIT')).length;
+    document.getElementById('s1-tv-open').textContent=open;
+    document.getElementById('s1-tv-targets').textContent=targets;
+    document.getElementById('s1-tv-exited').textContent=exited;
   }else if(sys==='index'){
     document.getElementById('s2-tot').textContent=d.length;
     document.getElementById('s2-buy').textContent=d.filter(r=>r.signal.includes('BUY')).length;
@@ -605,9 +678,25 @@ function updateStats(sys){
   }
 }
 
-// filter button state
+// ── SWING tile + signal-type toggle handling ──
+function setTile(t){
+  swingTile=(swingTile===t)?null:t; // click again -> back to combined view
+  ['open','targets','exited'].forEach(x=>{
+    document.getElementById(`s1-tile-${x}`).classList.toggle('sel',swingTile===x);
+  });
+  renderSwing();
+}
+function toggleSig(s){
+  swingSig=(swingSig===s)?null:s;
+  ['bull','super'].forEach(x=>{
+    const b=document.getElementById(`s1-f${x}`);
+    b.className='fbtn'+(swingSig===x?(x==='super'?' on-gold':' on-green'):'');
+  });
+  renderSwing();
+}
+
+// filter button state (index / stocks only now)
 const fMap={
-  swing:{all:'s1-fall',open:'s1-fopen',sl:'s1-fsl',tsl:'s1-ftsl',t1:'s1-ft1',t2:'s1-ft2',t3:'s1-ft3',tp:'s1-ftp',bull:'s1-fbull',super:'s1-fsuper'},
   index:{all:'s2-fall',nifty:'s2-fnifty',sensex:'s2-fsensex',buy:'s2-fbuy',sell:'s2-fsell',open:'s2-fopen',sl:'s2-fsl',tsl:'s2-ftsl',target:'s2-ft',trailing:'s2-ftr',squared:'s2-fsq'},
   stocks:{all:'s3-fall',buy:'s3-fbuy',sell:'s3-fsell',new:'s3-fnew',sl:'s3-fsl',t1:'s3-ft1',rev:'s3-frev'},
 };
@@ -624,25 +713,47 @@ function setF(sys,f){
     const b=document.getElementById(bid);
     if(b)b.className=`fbtn ${fColors[f]||'on-navy'}`;
   }
-  if(sys==='swing')renderSwing();
   if(sys==='index')renderIndex();
   if(sys==='stocks')renderStocks();
+}
+
+function parseFlexDate(dateStr){
+  if(!dateStr)return null;
+  let d;
+  try{
+    if(dateStr.includes('-')){d=new Date(dateStr);}
+    else{const p=dateStr.split(/[/ ]/);d=new Date(`${p[2]}-${p[1]}-${p[0]}`);}
+  }catch(e){return null;}
+  return isNaN(d)?null:d;
 }
 
 function dateFilter(dateStr,sel){
   if(sel==='all')return true;
   if(!dateStr)return true;
   const now=new Date();
-  let d;
-  try{
-    if(dateStr.includes('-')){d=new Date(dateStr);}
-    else{const p=dateStr.split(/[/ ]/);d=new Date(`${p[2]}-${p[1]}-${p[0]}`);}
-  }catch(e){return true;}
-  if(isNaN(d))return true;
+  const d=parseFlexDate(dateStr);
+  if(!d)return true;
   if(sel==='today')return d.toDateString()===now.toDateString();
   if(sel==='week'){const w=new Date(now);w.setDate(now.getDate()-7);return d>=w;}
   if(sel==='month'){const m=new Date(now);m.setDate(now.getDate()-30);return d>=m;}
   return true;
+}
+
+// exact-day filter for the swing calendar picker (input type=date -> "YYYY-MM-DD")
+function dateMatchesExact(dateStr,pickedYMD){
+  if(!pickedYMD)return true;
+  if(!dateStr)return false;
+  const d=parseFlexDate(dateStr);
+  if(!d)return false;
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`===pickedYMD;
+}
+
+// which date field represents "when this row's shown state happened":
+// OPEN rows -> entry date; anything that changed status (targets/SL/TSL) -> status timestamp date
+function swingDateVal(r){
+  if((r.status||'').toUpperCase()==='OPEN')return r.updated||r.entryTime;
+  return r.statusTs||r.updated;
 }
 
 function filterData(sys){
@@ -661,8 +772,6 @@ function filterData(sys){
     if(f==='t2')return st.includes('T2');
     if(f==='t3')return st.includes('T3');
     if(f==='tp')return st.includes('TARGETS+');
-    if(f==='bull')return s.includes('BULLISH')&&!s.includes('SUPER');
-    if(f==='super')return s.includes('SUPER');
     if(f==='buy')return s.includes('BUY');
     if(f==='sell')return s.includes('SELL');
     if(f==='nifty')return d.ticker.toUpperCase().includes('NIFTY');
@@ -674,6 +783,41 @@ function filterData(sys){
     if(f==='rev')return st.includes('REVERSAL');
     return true;
   });
+}
+
+// swing-specific filter pipeline: tile -> target/exited sub-filter -> signal type -> search -> date
+function filterSwing(){
+  const srch=document.getElementById('s1-srch').value.toLowerCase();
+  const pickedDate=document.getElementById('s1-date').value; // "" or YYYY-MM-DD
+  const exitedSub=document.getElementById('s1-fexited').value;
+  const targetSub=document.getElementById('s1-ftargets').value;
+
+  let base;
+  if(swingTile==='exited'){
+    base=D.swingExited.slice();
+    if(exitedSub==='sl')base=base.filter(r=>r.status.includes('SL HIT')&&!r.status.includes('TRAIL'));
+    else if(exitedSub==='tsl')base=base.filter(r=>r.status.includes('TRAIL')||r.status.includes('TSL'));
+  }else if(swingTile==='open'){
+    base=D.swing.filter(r=>r.status==='OPEN');
+  }else if(swingTile==='targets'){
+    base=D.swing.filter(r=>isTargetsStatus(r.status));
+    if(targetSub!=='all'){
+      const n={t1:1,t2:2,t3:3}[targetSub];
+      if(n)base=base.filter(r=>targetHit(r.status,n));
+      else if(targetSub==='tp')base=base.filter(r=>r.status.includes('TARGETS+'));
+    }
+  }else{
+    // combined default view — everything currently in the open sheet (open + trailing targets), not exited
+    base=D.swing.slice();
+  }
+
+  if(swingSig==='bull')base=base.filter(r=>r.signal.includes('BULLISH')&&!r.signal.includes('SUPER'));
+  if(swingSig==='super')base=base.filter(r=>r.signal.includes('SUPER'));
+
+  if(srch)base=base.filter(r=>r.ticker.toLowerCase().includes(srch));
+  if(pickedDate)base=base.filter(r=>dateMatchesExact(swingDateVal(r),pickedDate));
+
+  return base;
 }
 
 function fmt(n,dec=2){return n?n.toFixed(dec):'—'}
@@ -741,7 +885,7 @@ function targetHit(status,n){
 
 // ── RENDER SWING (redesigned) ──
 function renderSwing(){
-  const rows=filterData('swing');
+  const rows=filterSwing();
   const grid=document.getElementById('s1-grid');
   const load=document.getElementById('s1-load');
   const empty=document.getElementById('s1-empty');
@@ -804,6 +948,7 @@ function renderSwing(){
     </div>
     <div class="sc-sl-type">${d.slType||'—'}</div>
   </div>
+  ${d.exitReason?`<div class="sc-exit"><div><div class="sc-exit-lbl">Exit Reason</div><div class="sc-exit-val">${d.exitReason}</div></div></div>`:''}
   <div class="sc-prog"><div class="sc-progf" style="width:${p}%;background:${progC}"></div></div>
   <div class="sc-footer">
     <div>
